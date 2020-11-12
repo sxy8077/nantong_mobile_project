@@ -1,0 +1,66 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		}
+	    ,{
+            "path" : "pages/login/login",
+            "style" : {
+				"navigationBarTitleText": "登录"
+			}
+        }
+		,{
+			"path" : "pages/maintenance/maintenance",
+			"style" : {
+				"navigationBarTitleText": "运维"
+			}
+		}
+        ,{
+            "path" : "pages/fixedAssets/fixedAssets",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "固定资产"
+            }
+            
+        }
+        ,{
+            "path" : "pages/basicInfo/basicInfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "基本信息"
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#08B6F2",
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "login-template"
+	},
+	"tabBar":{
+		"selectedColor":"#b50e03",
+		"color":"#ccc",
+		"list":[
+			{
+				"text":"我的",
+				"pagePath":"pages/index/index"
+			}
+			,{
+				"text":"运维",
+				"pagePath":"pages/maintenance/maintenance"
+			}
+			,{
+				"text":"固定资产",
+				"pagePath":"pages/fixedAssets/fixedAssets"
+			}
+			,{
+				"text":"基本信息",
+				"pagePath":"pages/basicInfo/basicInfo"
+			}
+		]
+	}
+}
