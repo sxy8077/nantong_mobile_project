@@ -44,13 +44,14 @@
 				if (this.isLogin) {
 					this.logout()
 					uni.reLaunch({
-						url:'../login/login	'
+						url:'../login/login'
 					})
-				} else {
-					uni.navigateTo({
-						url: '/pages/login/login'
-					})
-				}
+				} 
+				// else {
+				// 	uni.navigateTo({
+				// 		url: '../login/login'
+				// 	})
+				// }
 			}                                             
 		}
 	}
