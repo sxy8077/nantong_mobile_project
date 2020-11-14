@@ -1,57 +1,72 @@
 <template>
-	<view>
-		<swiper class="swiper" indicator-color="#FEFEED" indicator-active-color="#AB2A25" previous-margin="10px" next-margin="10px" :indicator-dots="true" :autoplay="true" :interval="50000" :duration="500" :circular="true">
-			<swiper-item class="swiper-item" v-for="(item,index) in imgUrls" :key="index">
-				 <img :src="item" mode="aspectFill" class="swiper-image">
-			 </swiper-item>
-		</swiper>
-		<button v-if="isLogin" class="button" @click="loginOut">退出登录</button>
+	<view class="page">
+		<view >现在是登录状态，您的用户id是：{{uerInfo.userName}}</view>
+		<button  class="button" @click="bindLogin">退出登录</button>
 	</view>
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex';
+	
 	export default {
-		computed:{
-			isLogin(){
+		computed: mapState(['isLogin','uerInfo']),
+		// onLoad() {
+		// 	this.isLogin()
+		// },
+		onLoad() {
 				const isLogin = this.$store.state.isLogin;
-				if(!isLogin){
-					uni.redirectTo({
-						url:'/pages/login/login'
+					if(!isLogin){
+						uni.redirectTo({
+							url:'/pages/login/login'
+						})
+					}
+		},
+		// computed:{
+		// 	isLogin(){
+		// 		const isLogin = this.$store.state.isLogin;
+		// 		if(!isLogin){
+		// 			uni.redirectTo({
+		// 				url:'/pages/login/login'
+		// 			})
+		// 		}
+		// 		return isLogin;
+		// 	}
+		// },	
+		methods: {
+			// loginOut(){
+			// 	this.$store.commit('update',['isLogin',false]);
+			// }
+			...mapMutations(['logout']),
+			bindLogin() {
+				if (this.isLogin) {
+					this.logout()
+					uni.reLaunch({
+						url:'../login/login	'
+					})
+				} else {
+					uni.navigateTo({
+						url: '/pages/login/login'
 					})
 				}
-				return isLogin;
-			}
-		},
-		data() {
-			return {
-				imgUrls: [
-					'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?w=640',
-					'https://images.unsplash.com/photo-1551214012-84f95e060dee?w=640',
-					'https://images.unsplash.com/photo-1551446591-142875a901a1?w=640'
-				]
-			}
-		},
-		onLoad() {
-
-		},
-		methods: {
-			loginOut(){
-				this.$store.commit('update',['isLogin',false]);
-			}
+			}                                             
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.swiper{
-		height: 280upx;
-		padding: 20upx 0upx;
-		.swiper-image {
-			height: 100%;
-		    width: calc(100% - 20upx) !important;
-		    margin: auto;
-		    border-radius: 15upx;
-			display: block;
-		}
+	.page{
+		padding: 50upx 30upx;
+	}
+	view{
+		line-height: 1.5;
+		font-size: 32upx;
+	}
+	button{
+		margin-top: 30upx;
+		height: 80upx;
+		line-height: 80upx;
 	}
 </style>
