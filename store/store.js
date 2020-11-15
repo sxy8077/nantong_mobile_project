@@ -5,10 +5,10 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	state: {
-		isLogin :uni.getStorageSync('isLogin')?true:false,
+		isLogin :uni.getStorageSync('isLogin') ? true : false,
 	},
 	mutations: {
-		update(state,[key,value]){
+		update(state, [key, value]){
 			state[key]=value;
 		},
 	}
