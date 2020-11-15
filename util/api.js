@@ -1,4 +1,6 @@
+
 import { originalUrl } from './urlList.js'
+
 export const myRequest = (options) => {
 	return new Promise((resolve,reject) => {
 		uni.request({
@@ -17,3 +19,5 @@ export const myRequest = (options) => {
 		})
 	})
 }
+
+export const maintenanceUrl = 'app/operation/'; //运维首页地区和设备信息

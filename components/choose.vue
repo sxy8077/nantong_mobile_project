@@ -11,7 +11,7 @@
 				<!-- #ifdef APP-PLUS -->
 				<image :src="item.H5imgUrl" class="iconRight"></image>
 				<!-- #endif -->
-				<text>{{item.name}}</text>
+				<text style="color: #fff">{{item.name}}</text>
 			</view>
 			<image src="../static/icon/arrow.png" class="iconLeft"></image>
 		</view>

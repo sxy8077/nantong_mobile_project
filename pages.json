@@ -1,5 +1,6 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -15,7 +16,10 @@
 		,{
 			"path" : "pages/maintenance/maintenance",
 			"style" : {
-				"navigationBarTitleText": "运维"
+				"navigationBarTitleText": "循环水智慧管家远程监控系统",
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
 			}
 		}
         ,{
@@ -53,7 +57,6 @@
                 "navigationBarTitleText": "传感器信息",
                 "enablePullDownRefresh": false
             }
-            
         }
         ,{
             "path" : "pages/basicInfo/equipmentInfo/equipmentInfo",
@@ -61,15 +64,31 @@
             {
                 "navigationBarTitleText": "设备信息",
                 "enablePullDownRefresh": false
+			}
+		}
+		,{
+			"path": "pages/basicInfo/ClientMes/ClientMes",
+			"style": {
+				"navigationBarTitleText": "客户信息"
+			}
+		}
+        ,{
+            "path" : "pages/basicInfo/ClientMes/messages/messages",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "客户详细信息"
             }
             
         }
     ],
 	"globalStyle": {
 		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#08B6F2",
+		"navigationBarBackgroundColor": "#607fcc",
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "login-template"
+		"navigationBarTitleText": "login-template",
+		"app-plus":{
+			"bounce": "none"
+		}
 	},
 	"tabBar":{
 		"selectedColor":"#b50e03",
