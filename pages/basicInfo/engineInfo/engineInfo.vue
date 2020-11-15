@@ -196,10 +196,9 @@
 		width: 750rpx;
 		.fnc{
 			position: fixed;
-			height: 600rpx;
 			width: 750rpx;
 			background: $background-color;
-			padding: 30rpx;
+			padding: 0 30rpx;
 			z-index: 999;
 			.name{
 				font-size: 35rpx;
