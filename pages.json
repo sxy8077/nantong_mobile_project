@@ -15,7 +15,10 @@
 		,{
 			"path" : "pages/maintenance/maintenance",
 			"style" : {
-				"navigationBarTitleText": "运维"
+				"navigationBarTitleText": "循环水智慧管家远程监控系统",
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
 			}
 		}
         ,{
@@ -37,7 +40,7 @@
     ],
 	"globalStyle": {
 		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#08B6F2",
+		"navigationBarBackgroundColor": "#607fcc",
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "login-template"
 	},
