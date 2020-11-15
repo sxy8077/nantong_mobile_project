@@ -1,4 +1,4 @@
-const BASE_URL = ''
+const BASE_URL = 'http://122.51.80.50:8000/'
 export const myRequest = (options) => {
 	return new Promise((resolve,reject) => {
 		uni.request({
@@ -6,9 +6,6 @@ export const myRequest = (options) => {
 			method:options.method || 'GET',
 			data: options.data || {},
 			success: (res) => {
-					return uni.showToast({
-						title:'获取数据失败'
-					})
 				resolve(res)
 			},
 			fail: (err) => {
@@ -20,3 +17,5 @@ export const myRequest = (options) => {
 		})
 	})
 }
+
+export const maintenanceUrl = 'app/operation/'; //运维首页地区和设备信息
