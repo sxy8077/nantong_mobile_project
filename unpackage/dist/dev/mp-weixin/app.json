@@ -4,7 +4,9 @@
     "pages/login/login",
     "pages/maintenance/maintenance",
     "pages/fixedAssets/fixedAssets",
-    "pages/basicInfo/basicInfo"
+    "pages/basicInfo/basicInfo",
+    "pages/basicInfo/ClientMes/ClientMes",
+    "pages/basicInfo/ClientMes/messages/messages"
   ],
   "subPackages": [],
   "window": {
@@ -35,6 +37,5 @@
       }
     ]
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap84.json"
+  "usingComponents": {}
 }

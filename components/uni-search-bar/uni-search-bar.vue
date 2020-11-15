@@ -115,7 +115,11 @@
 </script>
 
 <style lang="scss" scoped>
+	//sxy设置的
 	$uni-searchbar-height: 45px;
+	//胡设置的
+	// $uni-searchbar-height: 36px;
+
 
 	.uni-searchbar {
 		/* #ifndef APP-NVUE */
@@ -123,8 +127,13 @@
 		/* #endif */
 		flex-direction: row;
 		position: relative;
+		
+		//s注销的
 		// padding: $uni-spacing-col-base;
 		background-color: $uni-bg-color;
+		//胡设置的
+		// padding: $uni-spacing-col-base;
+		// background-color: #607fcc;
 	}
 
 	.uni-searchbar__box {
@@ -135,7 +144,12 @@
 		overflow: hidden;
 		position: relative;
 		flex: 1;
+		
+		//孙设置的
 		justify-content: center;
+		//胡设置的
+		// justify-content: left;
+
 		flex-direction: row;
 		align-items: center;
 		height: $uni-searchbar-height;
@@ -176,7 +190,9 @@
 
 	.uni-searchbar__cancel {
 		padding-left: 10px;
+		//孙设置的
 		padding-right: 5px;
+		
 		line-height: $uni-searchbar-height;
 		font-size: 14px;
 		color: $uni-text-color;

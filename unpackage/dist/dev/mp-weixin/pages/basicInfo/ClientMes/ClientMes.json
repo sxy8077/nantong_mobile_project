@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "客户信息",
+  "usingComponents": {
+    "uni-search-bar": "/components/uni-search-bar/uni-search-bar"
+  }
+}
