@@ -64,8 +64,9 @@
 		"color":"#ccc",
 		"list":[
 			{
-				"text":"我的",
-				"pagePath":"pages/index/index"
+				"pagePath":"pages/index/index",
+				"iconPath":"static/icon/admin.png",
+				"selectedIconPath":"static/icon/admin-active.png"
 			}
 			,{
 				"text":"运维",
