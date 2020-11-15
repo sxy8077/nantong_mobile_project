@@ -50,7 +50,7 @@
 		},
 		onLoad(){
 			this.getClientunit()
-			this.goMesDetail()
+			// this.goMesDetail()
 		},
 		components: {uniSearchBar}
 	}

@@ -21,8 +21,8 @@
 			navigatorTo(index) {
 				switch(index){
 					case 0:
-						uni.navigatorTo({
-							url: '/'
+						uni.navigateTo({
+							url: 'ClientMes/ClientMes'
 						})
 						break;
 					case 1:
@@ -36,7 +36,11 @@
 						})
 						break;
 					case 3:	
-					
+						uni.navigateTo({
+							url: 'equipmentInfo/equipmentInfo'
+						})
+					default:
+						return;
 				}
 					
 				
