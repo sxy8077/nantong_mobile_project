@@ -2,6 +2,7 @@
 	<view class="page">
 		<view >现在是登录状态，您的用户id是：{{uerInfo.userName}}</view>
 		<button  class="button" @click="bindLogin">退出登录</button>
+
 	</view>
 </template>
 
@@ -12,10 +13,28 @@
 	} from 'vuex';
 	
 	export default {
+		computed:{
+			isLogin(){
+				const isLogin = this.$store.state.isLogin;
+				if(!isLogin){
+					uni.redirectTo({
+						url:'/pages/login/login'
+					})
+				}
+				return isLogin;
+			}
+		},
+		data() {
+			return {
+				
+			}
+		},
+
 		computed: mapState(['isLogin','uerInfo']),
 		// onLoad() {
 		// 	this.isLogin()
 		// },
+
 		onLoad() {
 				const isLogin = this.$store.state.isLogin;
 					if(!isLogin){

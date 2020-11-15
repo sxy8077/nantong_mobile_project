@@ -38,6 +38,34 @@
             }
             
         }
+        ,{
+            "path" : "pages/basicInfo/engineInfo/engineInfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "主机信息",
+                "enablePullDownRefresh": false,
+				"app-plus": {
+					"scrollIndicator" : "none"
+				}
+            }
+            
+        }
+        ,{
+            "path" : "pages/basicInfo/sensorInfo/sensorInfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "传感器信息",
+                "enablePullDownRefresh": false
+            }
+        }
+        ,{
+            "path" : "pages/basicInfo/equipmentInfo/equipmentInfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "设备信息",
+                "enablePullDownRefresh": false
+			}
+		}
 		,{
 			"path": "pages/basicInfo/ClientMes/ClientMes",
 			"style": {
@@ -57,7 +85,10 @@
 		"backgroundTextStyle": "light",
 		"navigationBarBackgroundColor": "#607fcc",
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "login-template"
+		"navigationBarTitleText": "login-template",
+		"app-plus":{
+			"bounce": "none"
+		}
 	},
 	"tabBar":{
 		"selectedColor":"#b50e03",

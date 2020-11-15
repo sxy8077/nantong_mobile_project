@@ -21,11 +21,12 @@
 </template>
 
 <script>
-	// import {checkPwd} from "@/common/common.js"
+	// import { checkPwd } from "@/common/common.js"
 	import {
 	    mapMutations
 	} from 'vuex';
 	
+
 	export default {
 		data() {
 			return {
@@ -41,6 +42,7 @@
 			isHidePasswordClick(){
 				this.isHidePassword=!this.isHidePassword
 			},
+
 			
 			bindLogin(e) {
 					console.log(e);

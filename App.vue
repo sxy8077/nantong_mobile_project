@@ -12,6 +12,9 @@
 		// },
 		// onHide: function() {
 		// 	console.log('App Hide')
+
+		// }
+
 		// },
 		onLaunch: function () {
 			uni.getStorage({
@@ -41,6 +44,7 @@
 		methods: {
 			...mapMutations(['login'])
 		}
+
 	}
 </script>
 

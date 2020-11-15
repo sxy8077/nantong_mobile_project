@@ -1,8 +1,10 @@
-const BASE_URL = 'http://122.51.80.50:8000/'
+
+import { originalUrl } from './urlList.js'
+
 export const myRequest = (options) => {
 	return new Promise((resolve,reject) => {
 		uni.request({
-			url:BASE_URL+options.url,
+			url:originalUrl+options.url,
 			method:options.method || 'GET',
 			data: options.data || {},
 			success: (res) => {
