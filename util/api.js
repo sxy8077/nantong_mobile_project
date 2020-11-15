@@ -1,14 +1,11 @@
-const BASE_URL = ''
+import { originalUrl } from './urlList.js'
 export const myRequest = (options) => {
 	return new Promise((resolve,reject) => {
 		uni.request({
-			url:BASE_URL+options.url,
+			url:originalUrl+options.url,
 			method:options.method || 'GET',
 			data: options.data || {},
 			success: (res) => {
-					return uni.showToast({
-						title:'获取数据失败'
-					})
 				resolve(res)
 			},
 			fail: (err) => {

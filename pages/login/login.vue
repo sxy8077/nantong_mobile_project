@@ -21,7 +21,7 @@
     </view>
 </template>
 <script>
-	import {checkPwd} from "@/common/common.js"
+	import { checkPwd } from "@/common/common.js"
 	export default {
 		data() {
 			return {
@@ -46,16 +46,16 @@
 				/*
 				* 登录逻辑
 				*/
-				this.$store.commit('update',['isLogin',true]);
 				// uni.reLaunch({
 				// 	url:'/pages/index/index'
 				// })
-					if(this.userName === "admin" && this.password === "1234567"){
-						 // 验证成功跳转目标页面 
-						 uni.reLaunch({
-						 	url:'/pages/index/index'
-						 })
-					}
+				if(this.userName === "admin" && this.password === "1234567"){
+					this.$store.commit('update',['isLogin' ,true]);
+					 // 验证成功跳转目标页面 
+					 uni.reLaunch({
+						url:'/pages/index/index'
+					 })
+				}
 				
 			}
 		}
