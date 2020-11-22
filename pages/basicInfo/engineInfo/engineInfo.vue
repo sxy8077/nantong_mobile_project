@@ -197,7 +197,7 @@
 		.fnc{
 			position: fixed;
 			width: 750rpx;
-			background: $background-color;
+			background: $uni-bg-color;
 			padding: 0 30rpx;
 			z-index: 999;
 			.name{

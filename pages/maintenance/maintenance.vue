@@ -32,7 +32,7 @@
 </template>
 
 <script>
-	import uniSearchBar from '@/components/uni-search-bar/uni-search-bar.vue'
+	import uniSearchBar from '@/components/uni-search-bar2/uni-search-bar2.vue'
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import { maintenanceUrl } from '../../util/api.js'
 	
