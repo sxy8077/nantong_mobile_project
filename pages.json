@@ -80,6 +80,45 @@
             }
             
         }
+        ,{
+            "path" : "pages/maintenance/monitor/monitor",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "实时监控",
+                "enablePullDownRefresh": false,
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
+            }
+            
+        }
+        ,{
+            "path" : "pages/maintenance/waterRemind/waterRemind",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "水质提醒",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/maintenance/equipmentMaintenance/equipmentMaintenance",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "设备维护",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/maintenance/sensorCalibration/sensorCalibration",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "传感器标定",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"backgroundTextStyle": "light",
@@ -91,25 +130,32 @@
 		}
 	},
 	"tabBar":{
-		"selectedColor":"#b50e03",
-		"color":"#ccc",
+		"selectedColor":"#607fcc",
+		"color":"#666666",
 		"list":[
-			{
+			{	
+				"text":"我的",
 				"pagePath":"pages/index/index",
 				"iconPath":"static/icon/admin.png",
 				"selectedIconPath":"static/icon/admin-active.png"
 			}
 			,{
 				"text":"运维",
-				"pagePath":"pages/maintenance/maintenance"
+				"pagePath":"pages/maintenance/maintenance",
+				"iconPath":"static/icon/maintenance.png",
+				"selectedIconPath":"static/icon/maintenance-active.png"
 			}
 			,{
 				"text":"固定资产",
-				"pagePath":"pages/fixedAssets/fixedAssets"
+				"pagePath":"pages/fixedAssets/fixedAssets",
+				"iconPath":"static/icon/fixedAssets.png",
+				"selectedIconPath":"static/icon/fixedAssets-active.png"
 			}
 			,{
 				"text":"基本信息",
-				"pagePath":"pages/basicInfo/basicInfo"
+				"pagePath":"pages/basicInfo/basicInfo",
+				"iconPath":"static/icon/basicInfo.png",
+				"selectedIconPath":"static/icon/basicInfo-active.png"
 			}
 		]
 	}

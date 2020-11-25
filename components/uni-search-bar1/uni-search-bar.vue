@@ -46,7 +46,7 @@
 			},
 			cancelText: {
 				type: String,
-				default: '取消'
+				default: '重置'
 			},
 			bgColor: {
 				type: String,

@@ -7,16 +7,16 @@
 				<text class="area">{{key}}地区</text>
 				<!-- #ifdef H5||APP-PLUS||APP-NVUE||APP-PLUS-NVUE||APP-VUE -->
 					<view class="isShow" @click="changeShow(index)" v-if="index !== i" >
-						<uni-icons type="arrowdown" color="#989898" size="20"></uni-icons>展开面板
+						<uni-icons type="arrowdown" color="#989898" size="30"></uni-icons>
 					</view>
 					<view class="isShow" @click="UnchangeShow" v-else>
-						<uni-icons type="arrowup" color="#989898" size="20"></uni-icons>收起面板
+						<uni-icons type="arrowup" color="#989898" size="30"></uni-icons>
 					</view>
 				<!-- #endif -->
 			</view>
 			<view class="body" v-show="index === i" >
 				<view class="equpInfo" v-for="(item,index) in value" :key='item.aid' >
-					<image src="../../static/shebei.png"></image>
+					<image src="../../static/shebei.png" @click="equipmentClick(item.aid)"></image>
 					<view class="equipemtCode">{{item.equipment_code}}</view>
 					<view class="clientUnit">{{item.client_unit}}</view>
 					<!-- #ifdef MP-WEIXIN -->
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-	import uniSearchBar from '@/components/uni-search-bar/uni-search-bar.vue'
+	import uniSearchBar from '@/components/uni-search-bar1/uni-search-bar.vue'
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import { maintenanceUrl } from '../../util/api.js'
 	
@@ -52,7 +52,7 @@
 			//收起展示面板
 			changeShow(index) {
 				this.i = index
-				console.log(index)
+				// console.log(index)
 			},
 			UnchangeShow() {
 				this.i=-1
@@ -122,9 +122,10 @@
 				if(res.data.data.length === 0 ) {
 					this.sortData = {}
 					uni.showToast({
-						title:'没有该单位'
+						title:'没有该单位',
+						icon:'none'
 					})
-					this.getAllData()
+					// this.getAllData()
 				} else {
 					res.data.data.map(item => {
 						if(item.status === '0' || item.status === '3' || item.status === '4' ) {
@@ -134,8 +135,15 @@
 					this.sortData = this.getSortData(this.allData,'region')
 				}
 			},
+			//点击搜索的取消按钮
 			cancel() {
 				this.getAllData()
+			},
+			//跳转的实时监测页面
+			equipmentClick(aid) {
+				uni.navigateTo({
+					url:'./monitor/monitor?equipment_id='+aid
+				})
 			}
 		},
 		components: {uniSearchBar,uniIcons},
@@ -163,9 +171,10 @@
 			margin: auto;
 			width: 70%;
 			border-radius: 10rpx;
+			margin-bottom: 50px;
 		}
 		.areaEquipment{
-			margin-top: 50px;
+			margin-top: 2px;
 			.head{
 				display: flex;
 				border-top: 1px solid #e6e6e6;
@@ -175,14 +184,15 @@
 				height: 130rpx;
 				background: #e6e6e6;
 				.area{
-					font-size: 60rpx;
+					font-size: 40rpx;
+					font-weight: bold;
 					line-height: 130rpx;
-					margin-left: 120rpx;
+					margin-left: 70rpx;
 					color: #3b466c;
 				}
 				.isShow{
 					line-height: 130rpx;
-					margin-left: 170rpx;
+					margin-left: 380rpx;
 					font-size: 30rpx;
 					color: #989898;
 				}
@@ -224,5 +234,8 @@
 				}
 			}
 		}
+		// .head:first-child {
+		// 	margin-bottom: 50px;
+		// }
 	}
 </style>
