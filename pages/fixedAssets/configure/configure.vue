@@ -60,6 +60,7 @@
 				</view>
 			</view>
 		</view>
+		<view style="height: 10rpx;"> </view>
 	</view>
 </template>
 
@@ -155,19 +156,19 @@
 		onReachBottom() {
 			console.log(123)
 			if(this.onsearch === false){
-				if(this.currentPage <= (this.count/10)){
+				if(this.currentPage < (this.count/10)){
 					this.currentPage += 1;
 					this.getList();
 				}
 			}else if(this.onsearch === true){
-				if(this.currentPage <= (this.count/10)){
+				if(this.currentPage < (this.count/10)){
 					this.currentPage += 1;
 					this.getPage();
 				}
 			}
 		},
 	}
-</script>
+// </script>
 
 <style lang="scss">
 	.allocation{
@@ -229,6 +230,7 @@
 					font-size: 35rpx;
 					border: 1px solid #f4bd5b;
 					width: 100%;
+					background: #fff;
 				}
 			}
 			.button{
