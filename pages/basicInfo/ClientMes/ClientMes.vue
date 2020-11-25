@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import uniSearchBar from '@/components/uni-search-bar/uni-search-bar.vue'
+	import uniSearchBar from '@/components/uni-search-bar1/uni-search-bar.vue'
 	export default {
 		data() {
 			return{
