@@ -60,7 +60,7 @@
 				</view>
 			</view>
 		</view>
-		<view style="height: 10rpx;"> </view>
+		<view style="height: 10rpx;"></view>
 	</view>
 </template>
 
