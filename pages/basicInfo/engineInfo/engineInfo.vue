@@ -1,10 +1,11 @@
 <template>
 	<view class="engineInfo">
+		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		<view class="fnc">
 			<view class="name">
 				<text>开始生产日期：</text>
 				<view class="time">
-					<picker 
+					<picker
 						mode="date" 
 						:value="begin_time_gte" 
 						class="picker"
@@ -73,9 +74,8 @@
 				<button type="default" size="mini" @click="reset">重置</button>
 			</view>
 		</view>
-		<view style="height: 650rpx;"></view>
 			<view class="engineList">
-				<view class="engienItem" v-for="item in engineInfo"  :key="engineInfo.aid">
+				<view class="engienItem" v-for="item in engineInfo"  :key="item.aid" @click="goTodetail(item)">
 					<view class="top">
 						<image src="../../../static/icon/file2.png" ></image>
 						<text>  </text>
@@ -83,16 +83,22 @@
 					</view>
 					<view class="bottom">
 						<text>主机编号：{{item.engine_code}}</text>
-						<text :style="{ color: item.status==='0'? 'red' : null }">状态：{{item.status | statusSwift}}</text>
+						<text :style="{ color: item.status==='0' ? 'red' : null }">状态：{{item.status | statusSwift}}</text>
 					</view>
 				</view>
 			</view>
+			
+			<view class="line" v-if="flag">-------------我是有底线的-------------</view>
 	</view>
 </template>
 
 <script>
 	import { enginInfoUrl } from '../../../util/urlList.js'
+	import backTop from '@/components/back-top/back-top.vue';
 	export default {
+		components:{
+			backTop,
+		},
 		data() {
 			return {
 				begin_time_gte: '选择查询',
@@ -107,6 +113,15 @@
 				],
 				engineInfo: [],
 				count: 0,
+				page: 1,
+				onsearch: false,
+				size: 10,
+				flag: false,
+				backTop: {
+					src: '../../../static/back-top/top.png',
+					scrollTop: 0
+				},
+				scrollTop: 0
 			}
 		},
 		filters: {
@@ -158,10 +173,15 @@
 				this.end_time_lte = '选择查询';
 				this.engine_code = '';
 				this.status = '选择查询';
+				this.page = 1;
+				this.count = 0;
+				this.onsearch = false;
+				this.engineInfo= [];
+				this.flag = false;
 				this.getEngineList();
+				
 			},
-			//搜索
-			async search() {
+			async getPage() {
 				const res = await this.$myRequest({
 					url: enginInfoUrl,
 					data: {
@@ -171,23 +191,66 @@
 						end_time_lte: this.end_time_lte==="选择查询" ? null : this.end_time_lte,
 						engine_code: this.engine_code,
 						status: this.status==="选择查询" ? null : this.status,
+						currentPage: this.page,
+						size: this.size
 					}
 				})
-				this.engineInfo = res.data.results;
+				if(res.data.count === 0){
+					uni.showToast({
+						icon: "none",
+						title: "没有要查询的内容"
+					})
+				}
+				this.engineInfo = [...this.engineInfo,...res.data.results];
 				this.count = res.data.count;
+			},
+			//搜索
+			search() {
+				this.onsearch = true;
+				this.count = 0;
+				this.engineInfo= [];
+				this.page = 1;
+				this.flag = false;
+				this.getPage();
 			},
 			//获取所有信息
 			async getEngineList() {
 				const res = await this.$myRequest({
-					url: enginInfoUrl
+					url: enginInfoUrl,
+					data: {currentPage: this.page, size: this.size}
 				})
-				this.engineInfo = res.data.results;
+				this.engineInfo = [...this.engineInfo,...res.data.results];
 				this.count = res.data.count;
+			},
+			goTodetail(item) {
+				uni.navigateTo({
+					url: `./enginedetail?begin_time=${item.begin_time}&end_time=${item.end_time}&engine_code=${item.engine_code}&engine_name=${item.engine_name}&note=${item.note}&status=${item.status}`
+				})
+				console.log(123);
 			}
 		},
 		onLoad() {
 			this.getEngineList()
 		},
+		onReachBottom() {
+			if(this.onsearch === false){
+				if(this.page <= (this.count/10)){
+					this.page += 1;
+					this.getEngineList();
+					this.flag = true;
+					console.log(this.page)
+				}
+			}else if(this.onsearch === true){
+				if(this.page <= (this.count/10)){
+					this.page += 1;
+					this.getPage();
+					this.flag = true;
+				}
+			}
+		},
+		onPageScroll(e) {
+			this.backTop.scrollTop = e.scrollTop;
+		}
 	}
 </script>
 
@@ -195,7 +258,6 @@
 	.engineInfo{
 		width: 750rpx;
 		.fnc{
-			position: fixed;
 			width: 750rpx;
 			background: $background-color;
 			padding: 0 30rpx;
@@ -203,7 +265,7 @@
 			.name{
 				font-size: 35rpx;
 				color: #fff;
-				margin-top: 20rpx;
+				// margin-top: 20rpx;
 				.time{
 					display: flex;
 					margin-left: 20rpx;
@@ -280,6 +342,11 @@
 					}
 				}
 			}
+		}
+		.line{
+			text-align: center;
+			padding: 20rpx;
+			color: #ccc;
 		}
 	}
 
