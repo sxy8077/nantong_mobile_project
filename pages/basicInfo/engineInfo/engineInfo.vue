@@ -75,7 +75,7 @@
 		</view>
 		<view style="height: 650rpx;"></view>
 			<view class="engineList">
-				<view class="engienItem" v-for="item in engineInfo"  :key="engineInfo.aid">
+				<view class="engienItem" v-for="item in engineInfo" :key="engineInfo.aid">
 					<view class="top">
 						<image src="../../../static/icon/file2.png" ></image>
 						<text>  </text>
@@ -197,7 +197,7 @@
 		.fnc{
 			position: fixed;
 			width: 750rpx;
-			background: $uni-bg-color;
+			background: $background-color;
 			padding: 0 30rpx;
 			z-index: 999;
 			.name{
