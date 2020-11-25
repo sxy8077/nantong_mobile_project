@@ -26,7 +26,10 @@
             "path" : "pages/fixedAssets/fixedAssets",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "固定资产"
+                "navigationBarTitleText": "循环水智慧管家远程监控系统",
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
             }
             
         }
@@ -34,7 +37,10 @@
             "path" : "pages/basicInfo/basicInfo",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "基本信息"
+                "navigationBarTitleText": "循环水智慧管家远程监控系统",
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
             }
             
         }
@@ -49,7 +55,15 @@
 				}
             }
             
-        }
+        },
+		{
+			"path":"pages/basicInfo/engineInfo/enginedetail",
+			"style":
+			{
+				"navigationBarTitleText": "主机详细信息",
+				"enablePullDownRefresh": false
+			}
+		}
         ,{
             "path" : "pages/basicInfo/sensorInfo/sensorInfo",
             "style" :                                                                                    
@@ -77,6 +91,34 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "客户详细信息"
+            }
+            
+        }
+        ,{
+            "path" : "pages/fixedAssets/configure/configure",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "设备配置记录",
+                "enablePullDownRefresh": false,
+				"onReachBottomDistance": 100
+            }
+            
+        }
+        ,{
+            "path" : "pages/fixedAssets/allocation/allocation",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "设备调拨记录",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/fixedAssets/scrap/scrap",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "设备报废记录",
+                "enablePullDownRefresh": false
             }
             
         }
