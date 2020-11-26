@@ -385,17 +385,17 @@
 				switch(page) {
 					case 'waterRemind':
 						uni.navigateTo({
-							url:'../waterRemind/waterRemind'
+							url:'../waterRemind/waterRemind?equipment_id='+this.equipmentId
 						})
 						break;
 					case 'equipMaintenance':
 						uni.navigateTo({
-							url:'../equipmentMaintenance/equipmentMaintenance'
+							url:'../equipmentMaintenance/equipmentMaintenance?equipment_id='+this.equipmentId
 						})
 						break;
 					case 'sensorCalibration':
 						uni.navigateTo({
-							url:'../sensorCalibration/sensorCalibration'
+							url:'../sensorCalibration/sensorCalibration?equipment_id='+this.equipmentId
 						})
 						break;
 				}
