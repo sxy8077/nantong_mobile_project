@@ -163,7 +163,6 @@
 					},
 					header: {
 						'content-type': 'application/x-www-form-urlencoded', 
-						/* token:token */
 					},
 					dataType:'json',
 					success: (res) => {

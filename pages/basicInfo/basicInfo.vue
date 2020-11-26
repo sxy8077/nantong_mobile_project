@@ -1,6 +1,6 @@
 <template>
 	<view class="basicInfo">
-		<choose-list :chooseItem="choose" @navigatorTo="navigatorTo"></choose-list>
+		<choose-list :chooseItem="choose" @navigatorTo="navigatorTo" :title="title"></choose-list>
 	</view>
 </template>
 
@@ -15,6 +15,7 @@
 							{name: '传感器信息', H5imgUrl: '/'},
 							{name: '设备信息', H5imgUrl: '/'},
 					],
+				title: "基本信息"
 			}
 		},
 		methods: {
@@ -53,5 +54,7 @@
 </script>
 
 <style lang="scss">
-	
+	page {
+	  background-color:$background-color;
+	}
 </style>

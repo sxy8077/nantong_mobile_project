@@ -7,7 +7,14 @@
 				<input class="input" type="text" maxlength="500rpx" confirm-type="search" v-model="client_unit" />
 			</view>
 			<view class="button">
-				<button size="mini" @click="search" class="blue">搜索</button>
+				<button 
+					size="mini" 
+					:style="{ background: color }" 
+					@click="search" 
+					class="blue"
+					@touchstart="background"
+					@touchend="background2">
+				搜索</button>
 				<button size="mini" @click="reset" class="border">重置</button>
 				<button class="yellow" size="mini" @click="addClient">新增客户</button>
 			</view>
@@ -51,7 +58,11 @@
 						<input  class="add" v-model="inputValue.note"/>
 					</view>
 					<view class="save">
-						<button size="mini" class="yellow" @click="save">保存</button>
+						<button 
+							size="mini" 
+							class="yellow" 
+							@click="save"
+						>保存</button>
 						<button size="mini" class="blue" @click="resets">重置</button>
 					</view>
 				</view>
@@ -60,24 +71,19 @@
 		<!-- 信息展示区 -->
 		<view class="messages_list">
 			<view class="news">客户信息</view>
-			<view class="line"></view>
-			<scroll-view scroll-y="true" class="scrolly">
 				<view class="messages_item" v-for="(item,index) in clientList" v-bind:key='item.id' @click="goMesDetail(item.aid)">
+					<view class="line"></view>
 					<view class='setting'>
-						<view class="picture">
-							<image
-								style="width: 40px;height:40px; " 
-								:mode="array.mode" :src="src" >
-							</image>
-						</view>
+						<image class="picture"
+							style="width: 60px;height:60px; " 
+							:mode="array.mode" :src="src" >
+						</image>
 						<view class="name">
 							<view>客户信息</view>
 							<text>客户单位：{{item.client_unit}}</text>
 						</view>
 					</view>
-					<view class="lines"></view>
 				</view>
-			</scroll-view>
 		</view>
 	</view>
 </template>
@@ -91,9 +97,14 @@
 				array: [{
 				            mode: 'scaleToFill',    
 				         }],
-				src:'../../../static/icon/client.png',	 
+				src:'../../../static/icon/itemfont.png',	 
 				clientList:[],
 				client_unit:'',
+				currentPage: 1,
+				size: 10,
+				count: 0,
+				onsearch: false,
+				color: '#5675c6',
 				inputValue:[]	 
 			}
 		},
@@ -102,6 +113,9 @@
 			async getClientunit(){
 				const res = await this.$myRequest({
 					url:messageCUrl,
+					data:{
+						size: this.size
+					}
 				})
 				console.log(res)
 				this.clientList = res.data.results
@@ -117,8 +131,22 @@
 				this.client_unit = '';
 				this.getClientunit();
 			},
-			//搜索
-			async search(){
+			//点击搜索
+			search(){
+				this.onsearch = true;
+				this.clientList = [],
+				this.count = 0;
+				this.currentPage = 1;
+				this.getsearch();
+			},
+			background() {
+				this.color = "#dedede";
+			},
+			background2() {
+				this.color = "#5675c6";
+			},
+			//获取搜索内容
+			async getsearch(){
 				const res = await this.$myRequest({
 					url:messageCUrl,
 					data:{
@@ -176,7 +204,7 @@
 		width: 680rpx;
 		height: 300rpx;
 		border: 0.5px solid #DCDCDC;
-		border-radius: 10rpx;
+		border-radius: 30rpx;
 		background: #f4f4f4;
 		margin: 60rpx 35rpx;
 		.header{
@@ -212,32 +240,26 @@
 			border: 1px solid #607fcc;
 		}
 		.blue{
-			background: #607fcc;
+			/* background: #607fcc; */
 			color: white;
 		}
 	}
 	//客户信息部分样式
-	.scrolly{
-		height: auto;
-	}
 	.messages_list{
 		width: 680rpx;
 		height: auto;
 		border: 0.5px solid #DCDCDC;
-		border-radius: 10rpx;
+		border-radius: 30rpx;
 		background: #f4f4f4;
 		margin: 60rpx 35rpx;
 		.news{
 			font-size: 40rpx;
 			font-weight:bold;
 			color: #3b466c;
-			margin: 30rpx 40rpx;
+			margin: 40rpx 40rpx;
 		}
 		.line{
-			width: 670rpx;
-			height: 2rpx;
-			background:#3b466c;
-			margin-left: 5rpx;
+			border-bottom: 2px solid #cccccc;
 		}
 		.messages_item{
 			width: 100%;
@@ -249,28 +271,13 @@
 				display: flex;
 				flex-direction: row;
 				.picture{
-					width: 60px;
-					height: 60px; 
-					background-color: #9eafdb;
-					border: 0.5px solid #DCDCDC;
-					border-radius: 10rpx;
 					margin: 15px 10px 15px 30px;
-					image{
-						margin: 10px 10px;
-					}
 				}
 				.name{
 					margin: 15px 20px;
 					line-height: 30px;
 				}
 			}	
-		}
-		.lines{
-			width: 600rpx;
-			height: 2rpx;
-			background:#cccccc;
-			margin-left:40rpx ;
-			margin-top: 134rpx;
 		}
 	}
 	//弹窗样式
