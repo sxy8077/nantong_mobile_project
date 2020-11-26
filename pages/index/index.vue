@@ -1,8 +1,12 @@
 <template>
-	<view class="page">
-		<view >现在是登录状态，您的用户id是：{{uerInfo.userName}}</view>
-		<button  class="button" @click="bindLogin">退出登录</button>
-
+	<view>
+		<view class="page">
+			<view >现在是登录状态，您的用户id是：{{uerInfo.userName}}</view>
+			<button  class="button" @click="bindLogin">退出登录</button>
+		</view>
+		<view >
+			<button size="mini" @click="goaccountManage">账户管理</button>
+		</view>
 	</view>
 </template>
 
@@ -71,7 +75,13 @@
 				// 		url: '../login/login'
 				// 	})
 				// }
-			}                                             
+			},
+			//跳转到账户管理页面
+			goaccountManage(){
+				uni.navigateTo({
+					url:'accountManage/accountManage'
+				})
+			}											
 		}
 	}
 </script>

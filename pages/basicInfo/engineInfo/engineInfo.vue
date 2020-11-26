@@ -1,6 +1,105 @@
 <template>
+	<view class="engine">
+		<view class="fnc">
+			<view class="data"><text class="tit">开始生产日期：</text></view>
+			<view class="time">
+				<picker
+					mode="date" 
+					:value="begin_time_gte" 
+					class="picker"
+					:style="{ color: begin_time_gte==='选择查询'? '#ccc' : null }"
+					
+					@change="getdate($event,'bgte')"
+				>
+					<view class="uni-input">{{begin_time_gte}}</view>
+				</picker>
+				<view> </view>
+				<text style="margin-top: 10rpx;">至</text>
+				<view> </view>
+				<picker
+					mode="date"  
+					class="picker"
+					:value="begin_time_lte" 
+					:style="{ color: begin_time_lte==='选择查询'? '#ccc' : null }"
+					@change="getdate($event,'blte')"
+				>
+					<view class="uni-input">{{begin_time_lte}}</view>
+				</picker>
+			</view>
+			<view class="data" style="margin-top: 30rpx;"><text class="tit">结束生产日期：</text></view>
+			<view class="time">
+				<picker
+					mode="date"  
+					class="picker"
+					:value="end_time_gte" 
+					:style="{ color: end_time_gte==='选择查询'? '#ccc' : null }"
+					@change="getdate($event,'egte')"
+				>
+					<view class="uni-input">{{end_time_gte}}</view>
+				</picker>
+				<view> </view>
+				<text style="margin-top: 10rpx;">至</text>
+				<view> </view>
+				<picker
+					mode="date"  
+					class="picker"
+					:value="end_time_lte" 
+					:style="{ color: end_time_lte==='选择查询'? '#ccc' : null }"
+					@change="getdate($event,'elte')"
+				>
+					<view class="uni-input">{{end_time_lte}}</view>
+				</picker>
+			</view>
+			<view class="searchitem">
+				<view class="label"><span>主机编号：</span></view>
+				<input type="text" v-model="engine_code"/>
+			</view>
+			<view class="searchitem">
+				<view class="label"><span>状态：</span></view>
+				<picker
+					mode="selector" 
+					:range="allStatus" 
+					range-key="name"
+					:value="status"
+					class="picker" 
+					@change="getstatus"
+					:style="{ color: status==='选择查询'? '#ccc' : null }"
+				>
+					<view>{{status | statusSwift}}</view>
+				</picker>
+			</view>		
+			<view class="button">
+				<button 
+					type="default"
+					 size="mini" 
+					 :style="{ background: color }" 
+					 @touchstart="background"
+					 @touchend="background2"
+					 @click="search"
+				 >搜索
+				 </button>
+				<button type="default" size="mini" @click="reset">重置</button>
+			</view>
+		</view>
+		<view class="item">
+			<view class="title">主机信息表：</view>
+			<view class="list" v-for="item in engineInfo" :key="item.aid">
+				<view class="line"></view>
+				<view class="listitem">
+					<image src="../../../static/icon/itemfont.png" mode=""></image>
+					<view class="text">
+						<view>主机编号：{{item.engine_code}}</view>
+						<view :style="{ color: item.status==='0' ? 'red' : null }">状态：{{item.status | statusSwift}}</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view style="height: 10rpx;"></view>
+	</view>
+</template>
+
+<!-- <template>
 	<view class="engineInfo">
-		<backTop :src="backTop.src"  :scrollTop="backTop.scrollTop"></backTop>
 		<view class="fnc">
 			<view class="name">
 				<text>开始生产日期：</text>
@@ -74,7 +173,7 @@
 				<button type="default" size="mini" @click="reset">重置</button>
 			</view>
 		</view>
-			<view class="engineList">
+			<view class="engineInfo">
 				<view class="engienItem" v-for="item in engineInfo"  :key="item.aid" @click="goTodetail(item)">
 					<view class="top">
 						<image src="../../../static/icon/file2.png" ></image>
@@ -87,18 +186,12 @@
 					</view>
 				</view>
 			</view>
-			
-			<view class="line" v-if="flag">-------------我是有底线的-------------</view>
 	</view>
-</template>
+</template> -->
 
 <script>
 	import { enginInfoUrl } from '../../../util/urlList.js'
-	import backTop from '@/components/back-top/back-top.vue';
 	export default {
-		components:{
-			backTop,
-		},
 		data() {
 			return {
 				begin_time_gte: '选择查询',
@@ -117,11 +210,7 @@
 				onsearch: false,
 				size: 10,
 				flag: false,
-				backTop: {
-					src: '../../../static/back-top/top.png',
-					scrollTop: 0
-				},
-				scrollTop: 0
+				color: '#5675c6',
 			}
 		},
 		filters: {
@@ -167,6 +256,7 @@
 				}
 			},
 			reset() {
+				uni.showLoading();
 				this.begin_time_gte = '选择查询';
 				this.begin_time_lte = '选择查询';
 				this.end_time_gte = '选择查询';
@@ -195,6 +285,7 @@
 						size: this.size
 					}
 				})
+				uni.hideLoading()
 				if(res.data.count === 0){
 					uni.showToast({
 						icon: "none",
@@ -206,6 +297,7 @@
 			},
 			//搜索
 			search() {
+				uni.showLoading();
 				this.onsearch = true;
 				this.count = 0;
 				this.engineInfo= [];
@@ -221,13 +313,19 @@
 				})
 				this.engineInfo = [...this.engineInfo,...res.data.results];
 				this.count = res.data.count;
+				uni.hideLoading();
 			},
 			goTodetail(item) {
 				uni.navigateTo({
 					url: `./enginedetail?begin_time=${item.begin_time}&end_time=${item.end_time}&engine_code=${item.engine_code}&engine_name=${item.engine_name}&note=${item.note}&status=${item.status}`
 				})
-				console.log(123);
-			}
+			},
+			background() {
+				this.color = "#dedede";
+			},
+			background2() {
+				this.color = "#5675c6";
+			},
 		},
 		onLoad() {
 			this.getEngineList()
@@ -238,7 +336,6 @@
 					this.page += 1;
 					this.getEngineList();
 					this.flag = true;
-					console.log(this.page)
 				}
 			}else if(this.onsearch === true){
 				if(this.page <= (this.count/10)){
@@ -248,105 +345,132 @@
 				}
 			}
 		},
-		onPageScroll(e) {
-			this.backTop.scrollTop = e.scrollTop;
-		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.engineInfo{
-		width: 750rpx;
+	.engine{
 		.fnc{
-			width: 750rpx;
-			background: $background-color;
-			padding: 0 30rpx;
-			z-index: 999;
-			.name{
-				font-size: 35rpx;
+			box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
+			background: #f4f4f4;
+			width: 650rpx;
+			padding: 20rpx;
+			margin: 20rpx auto;
+			border-radius: 30rpx;
+			.data{
+				border-radius: 20rpx;
+				height: 60rpx;
+				background: #f4bd5b;
 				color: #fff;
-				// margin-top: 20rpx;
-				.time{
-					display: flex;
-					margin-left: 20rpx;
-					margin-top: 10rpx;
-					.picker{
-						height: 56rpx;
-						text-align: center;
-						background-color: #fff;
-						color: black;
-						border-radius: 10rpx;
-						width: 310rpx;
-						border: 1px solid #fff;
-						font-size: 40rpx;
-					}
+				.tit{
+					margin-left: 30rpx;
+					font-size: 35rpx;
+					display: inline-block;
+					line-height: 60rpx;
+					height: 100%;
 				}
-				.pickerStatus{
-					width: 400rpx;
-					background: #fff;
+			}
+			.time{
+				display: flex;
+				margin-top: 20rpx;
+				justify-content: space-between;
+				.picker{
+					height: 56rpx;
+					text-align: center;
+					background-color: #fff;
 					color: black;
 					border-radius: 10rpx;
-					margin-left: 20rpx;
-					width: 655rpx;
-					height: 60rpx;
-					margin-top: 10rpx;
-					text-align: center;
+					width: 280rpx;
+					border: 1px solid #fff;
 					font-size: 40rpx;
 				}
 			}
-			.input{
-				text-align: center;
-				font-size: 40rpx;
-				margin-left: 20rpx;
-				height: 48rpx;
-				border: 1px solid #fff;
-				width: 650rpx;
-				border-radius: 10rpx;
-				background: #fff;
-				color: black;
-				margin-top: 10rpx;
-			}
-		}
-		.buttons{
-			padding: 20rpx;
-			margin-left: 100rpx;
-			button:nth-child(1){
-				margin-right: 200rpx;
-			}
-		}
-		.engineList{
-			width: 100%;
-			padding:30 0rpx;
-			.engienItem{
-				border-bottom: 1px solid #eee;
-				padding: 30rpx;
-				.top{
-					display: flex;
-					align-items: center;
-					image{
-						width: 50rpx;
-						height: 50rpx;
-						vertical-align: middle;
-					}
-					text{
+			.searchitem{
+				margin-top: 50rpx;
+				display: flex;
+				.label{
+					background: #f4bd5b;
+					border-top-left-radius: 20rpx;
+					border-bottom-left-radius: 20rpx;
+					height: 60rpx;
+					width: 300rpx;
+					span {
 						margin-left: 30rpx;
-						font-size: 40rpx;
+						font-size: 35rpx;
+						display: inline-block;
+						line-height: 60rpx;
+						height: 100%;
+						color: #fff;
 					}
 				}
-				.bottom{
-					margin-top: 30rpx;
-					display: flex;
-					justify-content: space-between;
-					text:nth-child(2){
-						margin-left: 110rpx;
-					}
+				input {
+					height: 57rpx;
+					font-size: 35rpx;
+					border: 1px solid #f4bd5b;
+					width: 100%;
+					background: #fff;
+				}
+				.picker{
+					height: 57rpx;
+					font-size: 35rpx;
+					border: 1px solid #f4bd5b;
+					width: 100%;
+					background: #fff;
+					line-height: 50rpx;
+					text-align: center;
+				}
+			}
+			.button{
+				margin-top: 30rpx;
+				display: flex;
+				button {
+					width: 200rpx;
+				}
+				button:nth-child(1) {
+					background: #5675c6;
+					color: #fff;
+				}
+				button:nth-child(2) {
+					border: 1px solid #5675c6;
 				}
 			}
 		}
-		.line{
-			text-align: center;
+		.item{
+			box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
+			background: #f4f4f4;
+			width: 650rpx;
 			padding: 20rpx;
-			color: #ccc;
+			margin: 30rpx auto;
+			border-radius: 30rpx;
+			.title{
+				margin-top: 20rpx;
+				font-size: 30rpx;
+				color: #3b466c;
+			}
+			.line{
+				border-bottom: 2px solid #cccccc;
+				margin-top: 20rpx;
+			}
+			.list{
+				.listitem{
+					margin-top: 30rpx;
+					margin-bottom: 30rpx;
+					display: flex;
+					image{
+						width:150rpx;
+						height: 150rpx;
+						margin-right: 40rpx;
+					}
+					.text{
+						view{
+							margin-top: 20rpx;
+						}
+						view:nth-child(1){
+							margin-top: 0rpx;
+						}
+					}
+				}
+			}
 		}
 	}
 
