@@ -119,7 +119,10 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "水质提醒",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
 			}
 		},
 		{
@@ -136,7 +139,10 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "设备维护",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
             }
             
         }
@@ -145,7 +151,10 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "传感器标定",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
 			}
 		},
 		{
