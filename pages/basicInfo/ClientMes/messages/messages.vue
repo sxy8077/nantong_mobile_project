@@ -168,7 +168,6 @@
 					dataType:'json',
 					success: (res) => {
 							console.log(res.data);
-							/* this.clientList = res.data */
 							this.inputValue = ''
 						}
 				})
