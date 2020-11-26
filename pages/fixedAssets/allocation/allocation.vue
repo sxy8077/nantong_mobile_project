@@ -1,5 +1,5 @@
 <template>
-	<view class="configure">
+	<view class="allocation">
 		<view class="fnc">
 			<view class="data"><text class="tit">日期筛选：</text></view>
 			<view class="time">
@@ -44,7 +44,7 @@
 			</view>
 		</view>
 		<view class="item">
-			<view class="title">设备配置记录表：</view>
+			<view class="title">设备调拨记录表：</view>
 			<view class="list" v-for="item in allocationInfo" :key="item.aid">
 				<view class="line"></view>
 				<view class="listitem">
@@ -91,6 +91,7 @@
 					}
 				},
 				search() {
+					uni.showLoading();
 					this.onsearch = true;
 					this.allocationInfo = [],
 					this.count = 0;
@@ -104,6 +105,7 @@
 					this.color = "#5675c6";
 				},
 				reset() {
+					uni.showLoading();
 					this.begin_time = '选择查询';
 					this.end_time ='选择查询';
 					this.transfer_unit = '';
@@ -119,11 +121,13 @@
 						url: equipmentAllocation,
 						data: {currentPage: this.currentPage, size: this.size}
 					})
+					uni.hideLoading();
 					this.allocationInfo = [...this.allocationInfo,...res.data.data];
 					this.count = res.data.count;
 				},
 				//获取搜索内容
 				async getPage() {
+					uni.showLoading();
 					const res = await this.$myRequest({
 						url: equipmentAllocation,
 						data: {
@@ -134,6 +138,7 @@
 							size: this.size
 						}
 					})
+					uni.hideLoading();
 					if(res.data.count === 0){
 						uni.showToast({
 							icon: "none",
@@ -148,7 +153,6 @@
 			this.getList();
 		},
 		onReachBottom() {
-			console.log(123)
 			if(this.onsearch === false){
 				if(this.currentPage < (this.count/10)){
 					this.currentPage += 1;
@@ -165,7 +169,7 @@
 </script>
 
 <style lang="scss">
-	.configure{
+	.allocation{
 		.fnc{
 			box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
 			background: #f4f4f4;
