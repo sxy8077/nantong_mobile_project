@@ -14,7 +14,8 @@
 		props: {
 			fontSize: String,
 			color: String,
-			align: String
+			align: String,
+			background:String,
 		},
 		inject: ['table'],
 		provide() {

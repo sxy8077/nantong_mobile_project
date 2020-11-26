@@ -105,7 +105,7 @@
 		-webkit-transform: translate3d(-100vw, 0, 0);
 	}
 	.center{
-    position: static;
+    // position: static;
     -webkit-position: static;
 		transform: translate3d(-100vw, -100%, 0);
 		-webkit-transform: translate3d(-100vw, -100%, 0);
