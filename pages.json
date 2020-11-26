@@ -76,7 +76,25 @@
             "path" : "pages/basicInfo/ClientMes/messages/messages",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "客户详细信息"
+                "navigationBarTitleText": ""
+            }
+            
+        }
+        ,{
+            "path" : "pages/index/accountManage/accountManage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "账户管理",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/index/accountManage/rolePower/rolePower",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
             }
             
         }
