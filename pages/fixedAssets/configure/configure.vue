@@ -1,5 +1,5 @@
 <template>
-	<view class="allocation">
+	<view class="configure">
 		<view class="fnc">
 			<view class="data"><text class="tit">日期筛选：</text></view>
 			<view class="time">
@@ -60,6 +60,7 @@
 				</view>
 			</view>
 		</view>
+		<view style="height: 10rpx;"></view>
 	</view>
 </template>
 
@@ -94,6 +95,7 @@
 					}
 				},
 				search() {
+					uni.showLoading();
 					this.onsearch = true;
 					this.configureInfo = [],
 					this.count = 0;
@@ -107,6 +109,7 @@
 					this.color = "#5675c6";
 				},
 				reset() {
+					uni.showLoading();
 					this.equipment_code = '';
 					this.engine_code ='';
 					this.begin_time = '选择查询';
@@ -123,6 +126,7 @@
 						url: equipmentConfiureUrl,
 						data: {currentPage: this.currentPage, size: this.size}
 					})
+					uni.hideLoading();
 					this.configureInfo = [...this.configureInfo,...res.data.data];
 					this.count = res.data.count;
 				},
@@ -139,6 +143,7 @@
 							size: this.size
 						}
 					})
+					uni.hideLoading();
 					if(res.data.count === 0){
 						uni.showToast({
 							icon: "none",
@@ -155,22 +160,22 @@
 		onReachBottom() {
 			console.log(123)
 			if(this.onsearch === false){
-				if(this.currentPage <= (this.count/10)){
+				if(this.currentPage < (this.count/10)){
 					this.currentPage += 1;
 					this.getList();
 				}
 			}else if(this.onsearch === true){
-				if(this.currentPage <= (this.count/10)){
+				if(this.currentPage < (this.count/10)){
 					this.currentPage += 1;
 					this.getPage();
 				}
 			}
 		},
 	}
-</script>
+// </script>
 
 <style lang="scss">
-	.allocation{
+	.configure{
 		.fnc{
 			box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
 			background: #f4f4f4;
@@ -229,6 +234,7 @@
 					font-size: 35rpx;
 					border: 1px solid #f4bd5b;
 					width: 100%;
+					background: #fff;
 				}
 			}
 			.button{
