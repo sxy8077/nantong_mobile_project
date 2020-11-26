@@ -240,7 +240,7 @@
 			border: 1px solid #607fcc;
 		}
 		.blue{
-			/* background: #607fcc; */
+			background: #607fcc;
 			color: white;
 		}
 	}
