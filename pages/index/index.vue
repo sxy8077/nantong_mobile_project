@@ -1,11 +1,19 @@
 <template>
 	<view>
-		<view class="page">
-			<view >现在是登录状态，您的用户id是：{{uerInfo.userName}}</view>
-			<button  class="button" @click="bindLogin">退出登录</button>
-		</view>
-		<view >
-			<button size="mini" @click="goaccountManage">账户管理</button>
+		<view class="block">
+			<view class="header">
+				<image 
+					style="width: 200rpx;height:200rpx;border-radius: 50%; "
+					:mode="array.mode"
+					:src="src"
+				>
+				</image>
+			</view>
+			<view class="name">{{uerInfo.userName}}</view>
+			<view class="button">
+				<button  size="mini"  @click="bindLogin">退出登录</button>
+				<button size="mini" @click="goaccountManage">账户管理</button>
+			</view>
 		</view>
 	</view>
 </template>
@@ -30,6 +38,10 @@
 		},
 		data() {
 			return {
+				array: [{
+				            mode: 'scaleToFill',    
+				         }],
+				src:'https://uploadfile.bizhizu.cn/up/de/52/a5/de52a5d178f00ebc694716141208876e.jpg',
 				
 			}
 		},
@@ -46,6 +58,12 @@
 							url:'/pages/login/login'
 						})
 					}
+				uni.getStorage({
+					key:'uerInfo',
+					success:function(res) {
+						console.log(11,res)
+					}
+				})
 		},
 		// computed:{
 		// 	isLogin(){
@@ -87,16 +105,26 @@
 </script>
 
 <style lang="scss" scoped>
-	.page{
-		padding: 50upx 30upx;
+	.block{
+		width: 100%;
+		height: auto;
+		background: #5675c6;
+		position: fixed;
+		.header{
+			margin: 100rpx 275rpx 60rpx 275rpx;
+		}
 	}
-	view{
-		line-height: 1.5;
-		font-size: 32upx;
+	.name{
+		width: 200rpx;
+		font-size: 60rpx;
+		margin-top: 60 rpx;
+		margin-left: 275rpx;
 	}
-	button{
-		margin-top: 30upx;
-		height: 80upx;
-		line-height: 80upx;
+	.button{
+		width: 500rpx;
+		display: flex;
+		justify-content: space-between;
+		margin: 20rpx 125rpx;
 	}
+	
 </style>

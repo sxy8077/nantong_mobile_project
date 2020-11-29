@@ -23,39 +23,39 @@
 				<view class="pops">
 					<view class="addClient">
 						<span style="height: 40rpx;">客户编号:</span>
-						<input  class="add" v-model="inputValue.client_code"/>
+						<input  class="add" v-model="client_code"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">客户单位:</span>
-						<input  class="add" v-model="inputValue.client_unit"/>
+						<input  class="add" v-model="client_unit"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">客户地址:</span>
-						<input  class="add" v-model="inputValue.client_address"/>
+						<input  class="add" v-model="client_address"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">客户邮编:</span>
-						<input  class="add" v-model="inputValue.client_zip_code"/>
+						<input  class="add" v-model="client_zip_code"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">客户行业:</span>
-						<input  class="add" v-model="inputValue.client_industry"/>
+						<input  class="add" v-model="client_industry"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">单位电话:</span>
-						<input  class="add" v-model="inputValue.unit_phone"/>
+						<input  class="add" v-model="unit_phone"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">单位传真:</span>
-						<input  class="add" v-model="inputValue.unit_fax"/>
+						<input  class="add" v-model="unit_fax"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">地区:</span>
-						<input  class="add" v-model="inputValue.region"/>
+						<input  class="add" v-model="region"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">备注:</span>
-						<input  class="add" v-model="inputValue.note"/>
+						<input  class="add" v-model="note"/>
 					</view>
 					<view class="save">
 						<button 
@@ -92,6 +92,7 @@
 	import {  originalUrl,messageCUrl } from '../../../util/urlList.js'
 	import pop from '@/components/ming-pop/ming-pop.vue'
 	export default {
+		components:{pop},
 		data() {
 			return{
 				array: [{
@@ -99,13 +100,20 @@
 				         }],
 				src:'../../../static/icon/itemfont.png',	 
 				clientList:[],
-				client_unit:'',
 				currentPage: 1,
 				size: 10,
 				count: 0,
 				onsearch: false,
 				color: '#5675c6',
-				inputValue:[]	 
+				client_unit:'',
+				client_code:'',
+				client_address:'',
+				client_zip_code:'',
+				client_industry:'',
+				unit_phone:'',
+				unit_fax:'',
+				region:'',
+				note:''
 			}
 		},
 		methods: {
@@ -117,7 +125,7 @@
 						size: this.size
 					}
 				})
-				console.log(res)
+				/* console.log(res) */
 				this.clientList = res.data.results
 			},
 			//页面跳转
@@ -166,35 +174,64 @@
 					url:  originalUrl + messageCUrl,
 					method:'POST',
 					data:{
-						client_code:this.inputValue.client_code,
-						client_unit:this.inputValue.client_unit,
-						client_address:this.inputValue.client_address,
-						client_zip_code:this.inputValue.client_zip_code,
-						client_industry:this.inputValue.client_industry,
-						unit_phone:this.inputValue.unit_phone,
-						unit_fax:this.inputValue.unit_fax,
-						region:this.inputValue.region,
-						note:this.inputValue.note
+						client_code:this.client_code,
+						client_unit:this.client_unit,
+						client_address:this.client_address,
+						client_zip_code:this.client_zip_code,
+						client_industry:this.client_industry,
+						unit_phone:this.unit_phone,
+						unit_fax:this.unit_fax,
+						region:this.region,
+						note:this.note
 					},
 					header: {
 						'content-type': 'application/x-www-form-urlencoded', 
 					},
 					dataType:'json',
 					success: (res) => {
-							console.log(res.data);
-							this.inputValue = ''
-						}
+							/* console.log(res.data); */
+							this.client_code='',
+							this.client_unit='',
+							this.client_address='',
+							this.client_zip_code='',
+							this.client_industry='',
+							this.unit_phone='',
+							this.unit_fax='',
+							this.region='',
+							this.note='',
+							this.getClientunit(),
+							this.$refs.pop.close()
+						},
+					fail:(res) => {
+						this.client_code='',
+						this.client_unit='',
+						this.client_address='',
+						this.client_zip_code='',
+						this.client_industry='',
+						this.unit_phone='',
+						this.unit_fax='',
+						this.region='',
+						this.note='',
+						message.warning('新建客户失败，请重试')
+					}
 				})
 			},
 			//弹框内容重置
 			resets(){
-				this.inputValue = ''
-			}
+				this.client_code='',
+				this.client_unit='',
+				this.client_address='',
+				this.client_zip_code='',
+				this.client_industry='',
+				this.unit_phone='',
+				this.unit_fax='',
+				this.region='',
+				this.note=''
+			},
 		},
 		onLoad(){
 			this.getClientunit()
 		},
-		components:{pop},
 	}
 </script>
 

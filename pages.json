@@ -107,7 +107,7 @@
             "path" : "pages/index/accountManage/rolePower/rolePower",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "角色权限",
                 "enablePullDownRefresh": false
             }
             
@@ -180,6 +180,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "设备报废记录",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/basicInfo/ClientMes/messages/contactMes/contactMes",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "联系人信息",
                 "enablePullDownRefresh": false
             }
             
