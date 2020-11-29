@@ -1,4 +1,3 @@
-
 <template>
 	<form class='loginView' @submit="bindLogin">
         <view class="input-box">

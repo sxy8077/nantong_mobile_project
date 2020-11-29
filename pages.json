@@ -183,6 +183,7 @@
                 "enablePullDownRefresh": false
             }
             
+<<<<<<< HEAD
         }
         ,{
             "path" : "pages/basicInfo/ClientMes/messages/contactMes/contactMes",
@@ -193,6 +194,49 @@
             }
             
         }
+=======
+        },
+		{
+			"path":"pages/fixedAssets/configure/configureDetail",
+			"style" :
+			{
+			    "navigationBarTitleText": "配置详情",
+			    "enablePullDownRefresh": false
+			}
+		},
+		{
+			"path":"pages/fixedAssets/allocation/allocationDeatil",
+			"style" :
+			{
+			    "navigationBarTitleText": "调拨详情",
+			    "enablePullDownRefresh": false
+			}
+		},
+		{
+			"path":"pages/fixedAssets/scrap/scrapDetail",
+			"style" :
+			{
+			    "navigationBarTitleText": "报废详情",
+			    "enablePullDownRefresh": false
+			}
+		},
+		{
+			"path":"pages/basicInfo/sensorInfo/sensorDetail",
+			"style" :
+			{
+			    "navigationBarTitleText": "传感器信息详情",
+			    "enablePullDownRefresh": false
+			}
+		},
+		{
+			"path":"pages/basicInfo/equipmentInfo/equipmentDetail",
+			"style" :
+			{
+			    "navigationBarTitleText": "设备信息详情",
+			    "enablePullDownRefresh": false
+			}
+		}
+>>>>>>> 9861277dbfea3dccf2a01adffdbf0bdd6f737d88
     ],
 	"globalStyle": {
 		"backgroundTextStyle": "light",

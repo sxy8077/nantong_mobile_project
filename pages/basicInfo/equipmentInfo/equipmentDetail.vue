@@ -1,9 +1,9 @@
 <template>
-	<view class="engineDetail">
+	<view class="equipmentDetail">
 		<view class="line"></view>
 		<view class="block">
 			<view class="title">
-				<text>主机信息</text>
+				<text>设备信息</text>
 			</view>
 			<view class="table">
 				<view class="lines"></view>
@@ -18,18 +18,24 @@
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">开始生产时间:</view>
-					<view class="message">{{begin_time}}</view>
-				</view>
-				<view class="lines"></view>
-				<view class="content">
-					<view class="name">结束生产时间:</view>
-					<view class="message">{{end_time}}</view>
+					<view class="name">设备编号:</view>
+					<view class="message">{{equipment_code}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
 					<view class="name">状态:</view>
-					<view class="message">{{status}}</view>
+					<view class="message" :style="{ color: status==='报废' ? 'red' : null}">{{status}}</view>
+				</view>
+				<view style="margin-bottom: 30rpx;"></view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">仓库:</view>
+					<view class="message">{{storehouse}}</view>
+				</view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">库位:</view>
+					<view class="message">{{storage_location}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
@@ -47,33 +53,41 @@
 	export default {
 		data() {
 			return {
-				engine_code: "",
+				equipment_code: "",
 				engine_name: "",
-				begin_time: "",
-				end_time: "",
+				engine_code: "",
+				storehouse: "",
+				storage_location: "",
 				note: "",
 				status: "",
 			}
 		},
 		methods: {
 			getDeail(item){
-				this.engine_code = item.engine_code;
+				this.equipment_code = item.equipment_code;
 				this.engine_name = item.engine_name;
-				this.begin_time = item.begin_time;
-				this.end_time = item.end_time;
+				this.engine_code = item.engine_code;
+				this.storehouse = item.storehouse;
+				this.storage_location = item.storage_location;
 				this.note = item.note;
-				this.status = this.statusSWift(item.status);
+				this.status = this.statusSwift(item.status);
+				this.equip_person = item.equip_person;
 			},
-			statusSWift(status) {
-				if(status === '1'){
-				  return '在产'
-				}else if(status === '0'){
-				  return '停产'
-				}
-			}
+			statusSwift(value) {
+			    if(value === '0'){
+			      return '在线'
+			    }else if(value === '1'){
+			      return '停运'
+			    }else if(value === '2'){
+			      return '报废'
+			    }else if(value === '3'){
+			      return '报修'
+			    }else if(value === '4'){
+			      return '维护'
+			    }
+			  }
 		},
 		onLoad(option) {
-			console.log(option)
 			this.getDeail(JSON.parse(option.item))
 		},
 		
@@ -84,7 +98,7 @@
 	// page{
 	// 	background:#607fcc ;
 	// }
-	.engineDetail{
+	.equipmentDetail{
 		.line{
 			width: 100%;
 			height: 4rpx;

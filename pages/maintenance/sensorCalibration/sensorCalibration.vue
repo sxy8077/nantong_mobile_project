@@ -51,23 +51,55 @@
 				<view class="nodata" v-if="remindData.length === 0">暂无数据</view>
 				<view class="list" v-for="(item,index) in remindData" :key='index' >
 					<view class="line"></view>
-					<view class="listitem">
+					<view class="listitem" @click="pop(index)">
 						<image src="../../../static/icon/itemfont.png" mode=""></image>
 						<view class="text">
 							<view>传感器类型：{{item.type_name}}</view>
-							<view>传感器编号：</view>
 							<view>标定日期：{{formatTime(item.calibrate_time)}}</view>
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
+		<pop ref="pop" direction="center" :is_close="true" :is_mask="true" :width="80">
+			<t-table border="1" border-color="#ccccc" class="table">
+				<t-tr font-size="14" color="#fff" background="#f4bd5b"  >
+					<t-th align="center" >水质提醒记录</t-th>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">标定时间:</t-td>
+					<t-td align="left" v-if="popData.length !== 0" >{{formatTime(popData.calibrate_time) }}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">传感器类型:</t-td>
+					<t-td align="left">{{popData.type_name}}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">标定理论值:</t-td>
+					<t-td align="left">{{popData.theoretical_value}}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">标定实际值:</t-td>
+					<t-td align="left" >{{popData.actual_value}}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">标定补偿值:</t-td>
+					<t-td align="left">{{popData.calibrate_compensation}}</t-td>
+				</t-tr>
+			</t-table>
+		</pop>
 	</view>
 </template>
 
 <script>
 	import { equipmentUrl, CalibrationMark,device } from '../../../util/urlList.js'
+	import pop from "@/components/ming-pop/ming-pop.vue"
+	import tTable from '@/components/t-table/t-table.vue';
+	import tTh from '@/components/t-table/t-th.vue';
+	import tTr from '@/components/t-table/t-tr.vue';
+	import tTd from '@/components/t-table/t-td.vue';
 	import uniCombox from "@/components/uni-combox/uni-combox"
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -84,6 +116,7 @@
 				remindData:[],
 				sensorData:[],
 				onsearch: false,
+				popData:''
 			}
 		},
 		onLoad(e) {
@@ -144,7 +177,8 @@
 						deviceNum:this.equipmentCode
 					}
 				})
-				console.log(res.data)
+				// console.log(res.data)
+				uni.hideLoading();
 				this.remindData = [...this.remindData,...res.data.data];
 				this.count = res.data.count
 			},
@@ -161,12 +195,14 @@
 						size: this.size
 					}
 				})
+				uni.hideLoading();
 				if(res.data.count === 0){
 					uni.showToast({
 						icon: "none",
 						title: "没有要查询的内容"
 					})
 				}
+				// console.log(res.data.data)
 				this.remindData = [...this.remindData,...res.data.data];
 				this.count = res.data.count;
 			},
@@ -192,14 +228,16 @@
 			background2() {
 				this.color = "#5675c6";
 			},
-			search() {
+			search: throttle(function() {
+				uni.showLoading();
 				this.onsearch = true;
 				this.remindData = [],
 				this.count = 0;
 				this.currentPage = 1;
 				this.getPage();
-			},
-			reset() {
+			}),
+			reset: throttle(function() {
+				uni.showLoading();
 				this.sensorType = '';
 				this.begin_time = '选择查询';
 				this.end_time ='选择查询';
@@ -208,7 +246,7 @@
 				this.onsearch = false;
 				this.remindData= [];
 				this.getAllRemind();
-			},
+			}),
 			//时间格式
 			formatTime(time) {
 				let year = '' 
@@ -219,14 +257,23 @@
 					return  year + ' ' 
 				}
 			},
+			//信息弹出框
+			pop(index) {
+				this.$refs.pop.show();
+				this.popData = this.remindData[index]
+				// console.log(this.popData)
+			},
 		},
-		components: {uniCombox}
+		components: {uniCombox,pop, tTable, tTh, tTr, tTd}
 	}
 </script>
 
 <style lang="scss">
 	page{
 		height: 100%;
+	}
+	.table{
+		margin-top: 8px;
 	}
 	.waterRemind{
 		background: $background-color;
@@ -306,6 +353,7 @@
 						font-size: 35rpx;
 						border: 1px solid #f4bd5b;
 						width: 100%;
+						background: #fff;
 					}
 				}
 				.button{
@@ -348,15 +396,12 @@
 						margin-bottom: 30rpx;
 						display: flex;
 						image{
-							width:170rpx;
-							height: 170rpx;
+							width:150rpx;
+							height: 150rpx;
 							margin-right: 40rpx;
 						}
 						.text{
 							view:nth-child(2){
-								margin-top: 20rpx;
-							}
-							view:nth-child(3){
 								margin-top: 20rpx;
 							}
 						}

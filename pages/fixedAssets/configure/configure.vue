@@ -49,7 +49,7 @@
 		</view>
 		<view class="item">
 			<view class="title">设备配置记录表：</view>
-			<view class="list" v-for="item in configureInfo" :key="item.aid">
+			<view class="list" v-for="item in configureInfo" :key="item.aid" @click="goDetail(item)">
 				<view class="line"></view>
 				<view class="listitem">
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
@@ -66,6 +66,7 @@
 
 <script>
 	import { equipmentConfiureUrl } from '../../../util/urlList.js'
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -94,21 +95,21 @@
 							return;
 					}
 				},
-				search() {
+				search:throttle(function(){
 					uni.showLoading();
 					this.onsearch = true;
 					this.configureInfo = [],
 					this.count = 0;
 					this.currentPage = 1;
 					this.getPage();
-				},
+				}), 
 				background() {
 					this.color = "#dedede";
 				},
 				background2() {
 					this.color = "#5675c6";
 				},
-				reset() {
+				reset: throttle(function(){
 					uni.showLoading();
 					this.equipment_code = '';
 					this.engine_code ='';
@@ -119,7 +120,7 @@
 					this.onsearch = false;
 					this.configureInfo= [];
 					this.getList();
-				},
+				}), 
 				//获取所有信息
 				async getList() {
 					const res = await this.$myRequest({
@@ -153,12 +154,16 @@
 					this.configureInfo = [...this.configureInfo,...res.data.data];
 					this.count = res.data.count;
 				},
+				goDetail(item){
+					uni.navigateTo({
+						url: "./configureDetail?item=" + encodeURIComponent(JSON.stringify(item)),	
+					})
+				}
 		},
 		onLoad() {
 			this.getList();
 		},
 		onReachBottom() {
-			console.log(123)
 			if(this.onsearch === false){
 				if(this.currentPage < (this.count/10)){
 					this.currentPage += 1;

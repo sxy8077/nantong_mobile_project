@@ -83,7 +83,7 @@
 		</view>
 		<view class="item">
 			<view class="title">主机信息表：</view>
-			<view class="list" v-for="item in engineInfo" :key="item.aid">
+			<view class="list" v-for="item in engineInfo" :key="item.aid" @click="goDetail(item)">
 				<view class="line"></view>
 				<view class="listitem">
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
@@ -98,99 +98,9 @@
 	</view>
 </template>
 
-<!-- <template>
-	<view class="engineInfo">
-		<view class="fnc">
-			<view class="name">
-				<text>开始生产日期：</text>
-				<view class="time">
-					<picker
-						mode="date" 
-						:value="begin_time_gte" 
-						class="picker"
-						:style="{ color: begin_time_gte==='选择查询'? '#ccc' : null }"
-						
-						@change="getdate($event,'bgte')"
-					>
-						<view class="uni-input">{{begin_time_gte}}</view>
-					</picker>
-					<text> ~ </text>
-					<picker 
-						mode="date"  
-						class="picker"
-						:value="begin_time_lte" 
-						:style="{ color: begin_time_lte==='选择查询'? '#ccc' : null }"
-						@change="getdate($event,'blte')"
-					>
-						<view class="uni-input">{{begin_time_lte}}</view>
-					</picker>
-				</view>
-			</view>
-			<view class="name">
-				<text>开始生产日期：</text>
-				<view class="time">
-					<picker
-						mode="date"  
-						class="picker"
-						:value="end_time_gte" 
-						:style="{ color: end_time_gte==='选择查询'? '#ccc' : null }"
-						@change="getdate($event,'egte')"
-					>
-						<view class="uni-input">{{end_time_gte}}</view>
-					</picker>
-					<text> ~ </text>
-					<picker
-						mode="date"  
-						class="picker"
-						:value="end_time_lte" 
-						:style="{ color: end_time_lte==='选择查询'? '#ccc' : null }"
-						@change="getdate($event,'elte')"
-					>
-						<view class="uni-input">{{end_time_lte}}</view>
-					</picker>
-				</view>
-			</view>
-			<view class="inputMix name">
-				<span>主机编号：</span>
-				<input type="text" class="input" v-model="engine_code"/>
-			</view>
-			<view class="inputMix name">
-				<span>状态：</span>
-				<picker
-					mode="selector" 
-					:range="allStatus" 
-					range-key="name"
-					:value="status"
-					class="pickerStatus" 
-					@change="getstatus"
-					:style="{ color: status==='选择查询'? '#ccc' : null }"
-				>
-					<view>{{status | statusSwift}}</view>
-				</picker>
-			</view>
-			<view class="buttons">
-				<button type="default" size="mini" @click="search">搜索</button>
-				<button type="default" size="mini" @click="reset">重置</button>
-			</view>
-		</view>
-			<view class="engineInfo">
-				<view class="engienItem" v-for="item in engineInfo"  :key="item.aid" @click="goTodetail(item)">
-					<view class="top">
-						<image src="../../../static/icon/file2.png" ></image>
-						<text>  </text>
-						<view>主机信息</view>
-					</view>
-					<view class="bottom">
-						<text>主机编号：{{item.engine_code}}</text>
-						<text :style="{ color: item.status==='0' ? 'red' : null }">状态：{{item.status | statusSwift}}</text>
-					</view>
-				</view>
-			</view>
-	</view>
-</template> -->
-
 <script>
 	import { enginInfoUrl } from '../../../util/urlList.js'
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -255,7 +165,7 @@
 						return;
 				}
 			},
-			reset() {
+			reset: throttle(function(){
 				uni.showLoading();
 				this.begin_time_gte = '选择查询';
 				this.begin_time_lte = '选择查询';
@@ -269,8 +179,7 @@
 				this.engineInfo= [];
 				this.flag = false;
 				this.getEngineList();
-				
-			},
+			}),
 			async getPage() {
 				const res = await this.$myRequest({
 					url: enginInfoUrl,
@@ -295,8 +204,9 @@
 				this.engineInfo = [...this.engineInfo,...res.data.results];
 				this.count = res.data.count;
 			},
-			//搜索
-			search() {
+			//搜索 
+			
+			search: throttle(function(){
 				uni.showLoading();
 				this.onsearch = true;
 				this.count = 0;
@@ -304,7 +214,7 @@
 				this.page = 1;
 				this.flag = false;
 				this.getPage();
-			},
+			}),
 			//获取所有信息
 			async getEngineList() {
 				const res = await this.$myRequest({
@@ -315,16 +225,16 @@
 				this.count = res.data.count;
 				uni.hideLoading();
 			},
-			goTodetail(item) {
-				uni.navigateTo({
-					url: `./enginedetail?begin_time=${item.begin_time}&end_time=${item.end_time}&engine_code=${item.engine_code}&engine_name=${item.engine_name}&note=${item.note}&status=${item.status}`
-				})
-			},
 			background() {
 				this.color = "#dedede";
 			},
 			background2() {
 				this.color = "#5675c6";
+			},
+			goDetail(item){
+				uni.navigateTo({
+					url: "./enginedetail?item=" + encodeURIComponent(JSON.stringify(item)),	
+				})
 			},
 		},
 		onLoad() {

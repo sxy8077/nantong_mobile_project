@@ -20,7 +20,7 @@
 		</view>
 		<view class="item">
 			<view class="title">设备报废记录表：</view>
-			<view class="list" v-for="item in scrapInfo" :key="item.aid">
+			<view class="list" v-for="item in scrapInfo" :key="item.aid" @click="goDetail(item)">
 				<view class="line"></view>
 				<view class="listitem">
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
@@ -36,6 +36,7 @@
 
 <script>
 	import { equipmentScrap } from '../../../util/urlList.js'
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -63,21 +64,21 @@
 							return;
 					}
 				},
-				search() {
+				search:throttle(function(){
 					uni.showLoading();
 					this.onsearch = true;
 					this.scrapInfo = [],
 					this.count = 0;
 					this.currentPage = 1;
 					this.getPage();
-				},
+				}), 
 				background() {
 					this.color = "#dedede";
 				},
 				background2() {
 					this.color = "#5675c6";
 				},
-				reset() {
+				reset:throttle(function(){
 					uni.showLoading();
 					this.begin_time = '选择查询';
 					this.end_time ='选择查询';
@@ -87,7 +88,7 @@
 					this.onsearch = false;
 					this.scrapInfo= [];
 					this.getList();
-				},
+				}), 
 				//获取所有信息
 				async getList() {
 					const res = await this.$myRequest({
@@ -118,6 +119,11 @@
 					this.scrapInfo = [...this.scrapInfo,...res.data.data];
 					this.count = res.data.count;
 				},
+				goDetail(item){
+					uni.navigateTo({
+						url: "./scrapDetail?item=" + encodeURIComponent(JSON.stringify(item)),	
+					})
+				}
 		},
 		onLoad() {
 			this.getList();

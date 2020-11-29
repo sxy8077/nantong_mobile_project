@@ -15,10 +15,12 @@
 				<view id="demo1" class="scroll-view-item_H " @click="navigatorTo('waterRemind')" >
 					<uni-icons type="compose" color="#3b466c" size="60"></uni-icons>
 					<view class="text">水质提醒记录</view>
+					<view class="dot" v-if="waterRot > 0 "></view>
 				</view>
 				<view id="demo1" class="scroll-view-item_H ">
 					<uni-icons type="gear-filled" color="#3b466c" size="60" @click="navigatorTo('equipMaintenance')" ></uni-icons>
 					<view class="text">设备维护</view>
+					<view class="dot" v-if="equipMaintainRot > 0 " ></view>
 				</view>
 				<view id="demo1" class="scroll-view-item_H ">
 					<uni-icons type="settings" color="#3b466c" size="60" @click="navigatorTo('sensorCalibration')" ></uni-icons>
@@ -63,8 +65,8 @@
 							</picker>
 						</view>
 						<view class="action">
-							<view class="search" @click="search">搜索</view>
-							<view class="reset" @click="reset">重置</view>
+							<button class="search" @click="search">搜索</button>
+							<button class="reset" @click="reset">重置</button>
 						</view>
 						<line-pic :canvasData="chooseData(listItem)" :id='listItem' ></line-pic>
 					</view>
@@ -73,8 +75,8 @@
 			<!-- <line-pic :canvasData="sensorData" :id='changeStr(listIndex)' ></line-pic> -->
 		</view>
 		<pop ref="pop" direction="center" :is_close="true" :is_mask="true" :width="80"> 
-			<t-table border="1" border-color="#95b99e" class="table">
-				<t-tr font-size="14" color="#5d6f61" >
+			<t-table border="1" border-color="#eee" class="table">
+				<t-tr font-size="14" color="#fff" background="#f4bd5b" >
 					<t-th align="center">设备详情</t-th>
 				</t-tr>
 				<t-tr font-size="12" color="#5d6f61" >
@@ -114,9 +116,10 @@
 	import tTh from '@/components/t-table/t-th.vue';
 	import tTr from '@/components/t-table/t-tr.vue';
 	import tTd from '@/components/t-table/t-td.vue';
+	import { throttle } from '@/common/throttle.js'
 	import navTab from '../../../components/navTab.vue';
 	import linePic from '../../../components/LinePic.vue';
-	import { equipmentUrl, device, sensorDataUrl, equipmentInfoUrl } from '../../../util/urlList.js'
+	import { equipmentUrl, device, sensorDataUrl, equipmentInfoUrl, ClientWaterRemindUrl,equipMaintainUrl } from '../../../util/urlList.js'
 	
 	export default {
 		data() {
@@ -143,7 +146,11 @@
 				EquipInfoData:[],//设备详情信息
 				finalEquipInfo:[],//最终设备详情
 				equipCode:[],//存放设备型号和编号
-				tel:[]
+				tel:[],
+				waterRot:0,
+				equipMaintainRot:0,
+				size:10,
+				currentPage:1
 			}
 		},
 		onLoad(e) {
@@ -152,6 +159,8 @@
 			this.getAllSensorData()
 			this.refresh()
 			this.getEquipInfoData()
+			this.weatherWaterRot()
+			this.weatherMaintainRot()
 		},
 		onUnload:function(){
 			this.clearTimer()
@@ -182,15 +191,17 @@
 				}
 			},
 			//重置
-			reset() {
+			reset:throttle(function() {
+				uni.showLoading();
 				this.begin_time = '选择查询';
 				this.end_time = '选择查询';
 				this.getAllSensorData()
-			},
+			}),
 			//搜索
-			async search() {
-				this.getAllSensorData()
-			},
+			 search:throttle(function() {
+				 uni.showLoading();
+				 this.getAllSensorData()
+			 }),
 			//获得设备数据
 			async getEquipmentData() {
 				const res = await this.$myRequest({
@@ -257,6 +268,7 @@
 						'end_time': this.end_time==="选择查询" ? null : this.end_time,
 					}
 				})
+				uni.hideLoading();
 				this.handleData(res.data)
 			},
 			//处理获得的数据
@@ -399,6 +411,36 @@
 						})
 						break;
 				}
+			},
+			//水质提醒红点判断
+			async weatherWaterRot() {
+				const res = await this.$myRequest({
+					url:ClientWaterRemindUrl,
+					data:{
+						equipment_id:this.equipmentId
+					}
+				})
+				res.data.data.map(item => {
+					if(item.deal_status === '1') {
+						this.waterRot = this.waterRot +1 
+					}
+				})
+			},
+			//设备维护红的判断
+			async weatherMaintainRot() {
+				const res = await this.$myRequest({
+					url:equipMaintainUrl,
+					data:{
+						equipment_id:this.equipmentId,
+						size: this.size,
+						currentPage: this.currentPage, 
+					}
+				})
+				res.data.data.map(item => {
+					if(item.maintain_status === '0') {
+						this.equipMaintainRot = this.equipMaintainRot +1 
+					}
+				})
 			}
 		},
 		components: {uniIcons, navTab, linePic, pop, tTable, tTh, tTr, tTd}
@@ -448,6 +490,15 @@
 				.scroll-view_H {
 					white-space: nowrap;
 					width: 100%;
+				}
+				.dot{
+					background: red;
+					width: 30rpx;
+					height: 30rpx;
+					border-radius: 15rpx;
+					position: relative;
+					left: 190rpx;
+					top: -150rpx;
 				}
 				.scroll-view-item_H {
 					display: inline-block;
