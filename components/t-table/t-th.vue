@@ -1,5 +1,5 @@
 <template>
-	<view class="t-th" :style="{ 'border-width': thBorder + 'px' ,'border-color':borderColor,'font-size':fontSize+'px' ,'color':color,'justify-content':thAlignCpd}">
+	<view class="t-th" :style="{ 'border-width': thBorder + 'px' ,'border-color':borderColor,'font-size':fontSize+'px' ,'color':color,'background':background,'justify-content':thAlignCpd}">
 		<slot></slot>
 	</view>
 </template>
@@ -25,6 +25,7 @@
 			this.borderColor = this.table.borderColor;
 			this.fontSize = this.tr.fontSize;
 			this.color = this.tr.color;
+			this.background = this.tr.background
 			if (this.align) {
 				this.thAlign = this.align;
 			} else {

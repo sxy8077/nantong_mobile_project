@@ -31,7 +31,7 @@
 				</view>
 				<view class="searchitem">
 					<view class="label"><span>维护原因：</span></view>
-					<uni-combox class="combox" :candidates="causes" @input='getInput' v-model="maintainCause" ></uni-combox>
+					<uni-combox class="combox" :candidates="causes"  v-model="maintainCause" ></uni-combox>
 				</view>
 				<view class="button">
 					<button 
@@ -41,9 +41,10 @@
 						 @touchstart="background"
 						 @touchend="background2"
 						 @click="search"
-					 >搜索
-					 </button>
+					>搜索
+					</button>
 					<button type="default" size="mini" @click="reset" >重置</button>
+					<button type="default" size="mini" @click="popMaintain"  >设备报修</button>
 				</view>
 			</view>
 			<view class="item">
@@ -56,21 +57,75 @@
 						<view class="text">
 							<view>设备维护记录：</view>
 							<view>维护原因：{{causeSWift(item.maintain_cause) }}</view>
-							<view>登记时间：{{item.maintain_time}}</view>
+							<view>登记时间：{{item.repair_time}}</view>
 						</view>
 					</view>
+					<view class="rot" v-if="item.maintain_status === '0'" ></view>
 				</view>
 			</view>
 		</view>
-		<pop ref="pop" direction="center" :is_close="true" :is_mask="true" :width="80"> 
-		具体内容
+		<pop ref="popMaintain" direction="center" :is_close="true" :is_mask="true" :width="80" > 
+			<view>
+				<view class="title">设备报修：</view>
+				<view class="Popline"></view>
+				<view class="popitem">
+					<view class="label"><span>维护原因：</span></view>
+					<picker :range="causes" @change='getInput' :value="index"  >
+						 <view class="input">{{causes[index]}}</view>
+					</picker>
+				</view>
+				<view class="descirbe"><span>设备状况描述：</span></view>
+				<input type="text" class="inputDescribe" v-model="descirbe" />
+				<button class="submit"
+				type="default"
+				size="mini" 
+				@click="send"
+				>提交</button>
+			</view>
+		</pop>
+		<pop ref="pop" direction="center" :is_close="true" :is_mask="true" :width="80" > 
+			<t-table border="1" border-color="#ccccc" class="table">
+				<t-tr font-size="14" color="#fff" background="#f4bd5b"  >
+					<t-th align="center" >设备维护记录</t-th>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">登记时间:</t-td>
+					<t-td align="left">{{popData.repair_time}}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">维护时间:</t-td>
+					<t-td align="left">{{popData.maintain_time}}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">维护原因:</t-td>
+					<t-td align="left">{{causeSWift(popData.maintain_cause) }}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="center">设备状况描述:</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">{{popData.fault_description}}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">维护状态:</t-td>
+					<t-td align="left" :style="{ color: popData.maintain_status==='0' ? 'red' : null }" >{{statusSWift(popData.maintain_status) }}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">负责人:</t-td>
+					<t-td align="left">{{popData.responsible_person}}</t-td>
+				</t-tr>
+			</t-table>
 		</pop>
 	</view>
 </template>
 
 <script>
-	import { equipmentUrl, equipMaintainUrl } from '../../../util/urlList.js'
+	import { equipmentUrl, equipMaintainUrl,addEquipMaintainUrl } from '../../../util/urlList.js'
 	import uniCombox from "@/components/uni-combox/uni-combox"
+	import tTable from '@/components/t-table/t-table.vue';
+	import tTh from '@/components/t-table/t-th.vue';
+	import tTr from '@/components/t-table/t-tr.vue';
+	import tTd from '@/components/t-table/t-td.vue';
 	import pop from "@/components/ming-pop/ming-pop.vue"
 	import { throttle } from '@/common/throttle.js'
 	export default {
@@ -88,6 +143,10 @@
 				color: '#5675c6',
 				maintainData:[],
 				onsearch: false,
+				addMaintainCause:'',
+				descirbe:'',
+				index:0,
+				popData:''
 			}
 		},
 		onLoad(e) {
@@ -158,9 +217,27 @@
 				this.maintainData = [...this.maintainData,...res.data.data];
 				this.count = res.data.count;
 			},
-			//获得输入框的值
+			//发送设备报修
+			async send() {
+				this.addMaintainCause = this.index
+				const res = await this.$myRequest({
+					url:addEquipMaintainUrl,
+					method:'post',
+					data:{
+						equipment_id:this.equipmentId,
+						maintain_cause:this.addMaintainCause,
+						fault_description:this.descirbe
+					}
+				})
+				this.maintainData = []
+				this.getAllRemind()
+				this.$refs.popMaintain.close();
+				this.descirbe = ''
+				this.addMaintainCause = 0
+			},
+			//获得下拉框的值
 			getInput(e) {
-				this.maintainCause = e
+				this.index = e.detail.value
 			},
 			getdate(e, name) {
 				switch(name){
@@ -217,19 +294,63 @@
 				  return '2'
 				}
 			},
-			//设备信息弹出框
+			//维护结果的转化
+			statusSWift(status) {
+				if(status === '0'){
+				  return '维护未结束'
+				}else if(status === '1'){
+				  return '维护结束'
+				}
+			},
+			//设备报修信息弹出框
+			popMaintain() {
+				this.$refs.popMaintain.show();
+			},
+			//每条信息详情
 			pop(index) {
-				this.$refs.pop.show();
-				console.log(this.maintainData[index])
+				this.$refs.pop.show()
+				this.popData = this.maintainData[index]
 			},
 		},
-		components: {uniCombox,pop}
+		components: {uniCombox,pop, tTh, tTr, tTd}
 	}
 </script>
 
 <style lang="scss">
 	page{
 		height: 100%;
+	}
+	.table{
+		margin-top: 8px;
+	}
+	.Popline{
+		border-bottom: 1px solid #cccccc;
+		margin-top: 20rpx;
+	}
+	.descirbe{
+		height: 60rpx;
+		width: 250rpx;
+		margin-top: 10rpx;
+		span {
+			margin-left: 10rpx;
+			font-size: 30rpx;
+			display: inline-block;
+			line-height: 60rpx;
+			height: 100%;
+		}
+	}
+	.submit{
+		margin-top: 30rpx;
+		border: 1px solid #5675c6;
+		width: 200rpx;
+		margin-left: 160rpx;
+	}
+	.inputDescribe{
+		margin-left: 10rpx;
+		height: 57rpx;
+		font-size: 30rpx;
+		border: 1px solid #eee;
+		width: 92%;
 	}
 	.equipmentMaintenance{
 		background: $background-color;
@@ -309,6 +430,7 @@
 						font-size: 35rpx;
 						border: 1px solid #f4bd5b;
 						width: 100%;
+						background: #fff;
 					}
 				}
 				.button{
@@ -323,6 +445,10 @@
 					}
 					button:nth-child(2) {
 						border: 1px solid #5675c6;
+					}
+					button:nth-child(3) {
+						background: red;
+						color: #fff;
 					}
 				}
 			}
@@ -346,6 +472,16 @@
 					margin-top: 20rpx;
 				}
 				.list{
+					margin-bottom: -20rpx;
+					.rot{
+						position: relative;
+						background: red;
+						width: 30rpx;
+						height: 30rpx;
+						border-radius: 15rpx;
+						left: 150rpx;
+						top: -200rpx;
+					}
 					.listitem{
 						margin-top: 30rpx;
 						margin-bottom: 30rpx;
@@ -367,7 +503,31 @@
 				}
 			}
 		}
-		
+		.popitem{
+			margin-top: 50rpx;
+			display: flex;
+			.label{
+				height: 60rpx;
+				width: 180rpx;
+				span {
+					margin-left: 10rpx;
+					font-size: 30rpx;
+					display: inline-block;
+					line-height: 60rpx;
+					height: 100%;
+				}
+			}
+			picker {
+				height: 57rpx;
+				font-size: 35rpx;
+				border: 1px solid #eee;
+				width: 60%;
+				.input{
+					font-size: 30rpx;
+					line-height: 60rpx;
+				}
+			}
+		}
 	}
 </style>
 

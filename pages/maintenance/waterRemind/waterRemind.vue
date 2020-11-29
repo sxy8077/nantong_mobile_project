@@ -36,11 +36,11 @@
 				<view class="button">
 					<button 
 						type="default"
-						 size="mini" 
-						 :style="{ background: color }" 
-						 @touchstart="background"
-						 @touchend="background2"
-						 @click="search"
+						size="mini" 
+						:style="{ background: color }" 
+						@touchstart="background"
+						@touchend="background2"
+						@click="search"
 					 >搜索
 					 </button>
 					<button type="default" size="mini" @click="reset" >重置</button>
@@ -51,24 +51,56 @@
 				<view class="nodata" v-if="remindData.length === 0">暂无数据</view>
 				<view class="list" v-for="(item,index) in remindData" :key='index' >
 					<view class="line"></view>
-					<view class="listitem">
+					<view class="listitem" @click="pop(index)">
 						<image src="../../../static/icon/itemfont.png" mode=""></image>
 						<view class="text">
-							<view>传感器类型：</view>
-							<view>传感器编号：</view>
+							<view>传感器类型：{{item.type_name}}</view>
 							<view>提醒日期：</view>
+							<view>{{formatTime(item.notice_time)}}</view>
 						</view>
 					</view>
+					<view class="rot" v-if="item.deal_status === '1'" ></view>
 				</view>
 			</view>
 		</view>
+		<pop ref="pop" direction="center" :is_close="true" :is_mask="true" :width="80">
+			<t-table border="1" border-color="#ccccc" class="table">
+				<t-tr font-size="14" color="#fff" background="#f4bd5b"  >
+					<t-th align="center" >水质提醒记录</t-th>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">提醒日期:</t-td>
+					<t-td align="left" v-if="popData.length !== 0">{{ formatTime(popData.notice_time) }}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">传感器类型:</t-td>
+					<t-td align="left">{{popData.type_name}}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">测量值:</t-td>
+					<t-td align="left">{{popData.measurement}}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">是否已处理:</t-td>
+					<t-td align="left" v-if="popData.length !== 0" :style="{ color: popData.deal_status==='1' ? 'red' : null }" >{{ statusSWift(popData.deal_status) }}</t-td>
+				</t-tr>
+				<t-tr font-size="12" color="#5d6f61" >
+					<t-td align="left">提示内容:</t-td>
+					<t-td align="left">{{popData.notice_content}}</t-td>
+				</t-tr>
+			</t-table>
+		</pop>
 	</view>
 </template>
 
 <script>
-	import { equipmentUrl, waterRemindUrl, device } from '../../../util/urlList.js'
+	import { equipmentUrl, waterRemindUrl, device, ClientWaterRemindUrl } from '../../../util/urlList.js'
+	import pop from "@/components/ming-pop/ming-pop.vue"
+	import tTable from '@/components/t-table/t-table.vue';
+	import tTh from '@/components/t-table/t-th.vue';
+	import tTr from '@/components/t-table/t-tr.vue';
+	import tTd from '@/components/t-table/t-td.vue';
 	import uniCombox from "@/components/uni-combox/uni-combox"
-	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -85,6 +117,7 @@
 				remindData:[],
 				onsearch: false,
 				sensorData:[],
+				popData:[]
 			}
 		},
 		onLoad(e) {
@@ -93,7 +126,7 @@
 			this.getAllRemind()
 		},
 		onReachBottom() {
-			console.log(123)
+			console.log('触底')
 			if(this.onsearch === false){
 				if(this.currentPage <= (this.count/10)){
 					this.currentPage += 1;
@@ -138,22 +171,21 @@
 			//获得所有提醒记录
 			async getAllRemind() {
 				const res = await this.$myRequest({
-					url:waterRemindUrl,
+					url:ClientWaterRemindUrl,
 					data:{
 						currentPage: this.currentPage, 
 						size: this.size,
 						equipment_id:this.equipmentId
 					}
 				})
-				uni.hideLoading();
-				// console.log(res.data)
+				console.log(res.data)
 				this.remindData = [...this.remindData,...res.data.data];
 				this.count = res.data.count
 			},
 			//获取搜索的值
 			async getPage() {
 				const res = await this.$myRequest({
-					url: waterRemindUrl,
+					url: ClientWaterRemindUrl,
 					data: {
 						begin_time: this.begin_time==="选择查询" ? null : this.begin_time,
 						end_time: this.end_time==="选择查询" ? null : this.end_time,
@@ -163,13 +195,13 @@
 						size: this.size
 					}
 				})
-				uni.hideLoading();
 				if(res.data.count === 0){
 					uni.showToast({
 						icon: "none",
 						title: "没有要查询的内容"
 					})
 				}
+				console.log(res.data.data)
 				this.remindData = [...this.remindData,...res.data.data];
 				this.count = res.data.count;
 			},
@@ -195,16 +227,14 @@
 			background2() {
 				this.color = "#5675c6";
 			},
-			search: throttle(function() {
-				uni.showLoading();
+			search() {
 				this.onsearch = true;
 				this.remindData = [],
 				this.count = 0;
 				this.currentPage = 1;
 				this.getPage();
-			}),
-			reset: throttle(function() {
-				uni.showLoading();
+			},
+			reset() {
 				this.sensorType = '';
 				this.begin_time = '选择查询';
 				this.end_time ='选择查询';
@@ -213,15 +243,41 @@
 				this.onsearch = false;
 				this.remindData= [];
 				this.getAllRemind();
-			}),
+			},
+			//信息弹出框
+			pop(index) {
+				this.$refs.pop.show();
+				this.popData = this.remindData[index]
+				// console.log(this.popData)
+			},
+			//时间格式
+			formatTime(time) {
+				let year = '' 
+				let second = ''
+				if (time !== null ) {
+					year = time.slice(0,10)
+					second = time.slice(11,19)
+					return  year + ' ' + second
+				}
+			},
+			statusSWift(status) {
+				if(status === '1'){
+				      return '未处理'
+				    }else if(status === '0'){
+				      return '已处理'
+				    }
+			},
 		},
-		components: {uniCombox}
+		components: {uniCombox,pop, tTable, tTh, tTr, tTd}
 	}
 </script>
 
 <style lang="scss">
 	page{
 		height: 100%;
+	}
+	.table{
+		margin-top: 8px;
 	}
 	.waterRemind{
 		background: $background-color;
@@ -301,6 +357,7 @@
 						font-size: 35rpx;
 						border: 1px solid #f4bd5b;
 						width: 100%;
+						background: #fff;
 					}
 				}
 				.button{
@@ -338,22 +395,32 @@
 					margin-top: 20rpx;
 				}
 				.list{
+					margin-bottom: -20rpx;
+					.rot{
+						position: relative;
+						background: red;
+						width: 30rpx;
+						height: 30rpx;
+						border-radius: 15rpx;
+						left: 150rpx;
+						top: -200rpx;
+					}
 					.listitem{
 						margin-top: 30rpx;
 						margin-bottom: 30rpx;
 						display: flex;
 						image{
-							width:170rpx;
-							height: 170rpx;
+							width:150rpx;
+							height: 150rpx;
 							margin-right: 40rpx;
 						}
 						.text{
 							view:nth-child(2){
 								margin-top: 20rpx;
 							}
-							view:nth-child(3){
-								margin-top: 20rpx;
-							}
+							// view:nth-child(3){
+							// 	margin-top: 20rpx;
+							// }
 						}
 					}
 				}
