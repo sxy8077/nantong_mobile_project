@@ -1,11 +1,21 @@
 <template>
-	<view class="engineDetail">
+	<view class="configDetail">
 		<view class="line"></view>
 		<view class="block">
 			<view class="title">
-				<text>主机信息</text>
+				<text>设备报废详情</text>
 			</view>
 			<view class="table">
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">设备编号:</view>
+					<view class="message">{{equipment_code}}</view>
+				</view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">申请时间:</view>
+					<view class="message">{{applicant_time}}</view>
+				</view>
 				<view class="lines"></view>
 				<view class="content">
 					<view class="name">主机编号:</view>
@@ -18,23 +28,28 @@
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">开始生产时间:</view>
-					<view class="message">{{begin_time}}</view>
+					<view class="name">申请人:</view>
+					<view class="message">{{applicant}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">结束生产时间:</view>
-					<view class="message">{{end_time}}</view>
+					<view class="name">申请人电话:</view>
+					<view class="message">{{applicant_tel}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">状态:</view>
-					<view class="message">{{status}}</view>
+					<view class="name">仓库:</view>
+					<view class="message">{{storehouse}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">备注:</view>
-					<view class="message">{{note}}</view>
+					<view class="name">库位:</view>
+					<view class="message">{{storage_location}}</view>
+				</view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">调拨原因:</view>
+					<view class="message">{{scrapping_reasons}}</view>
 				</view>
 				<view style="margin-bottom: 30rpx;"></view>
 			</view>
@@ -44,36 +59,35 @@
 </template>
 
 <script>
+	import { equipmentConfiureUrl } from '../../../util/urlList.js'
 	export default {
 		data() {
 			return {
+				applicant_time: "",
 				engine_code: "",
 				engine_name: "",
-				begin_time: "",
-				end_time: "",
-				note: "",
-				status: "",
+				equipment_code: "",
+				scrapping_reasons: "",
+				storage_location: "",   	//库位
+				storehouse: "",              	//仓库
+				applicant: "",
+				applicant_tel: "",
 			}
 		},
 		methods: {
 			getDeail(item){
+				this.applicant_time = item.applicant_time;
 				this.engine_code = item.engine_code;
 				this.engine_name = item.engine_name;
-				this.begin_time = item.begin_time;
-				this.end_time = item.end_time;
-				this.note = item.note;
-				this.status = this.statusSWift(item.status);
-			},
-			statusSWift(status) {
-				if(status === '1'){
-				  return '在产'
-				}else if(status === '0'){
-				  return '停产'
-				}
+				this.equipment_code = item.equipment_code;
+				this.scrapping_reasons = item.scrapping_reasons;
+				this.storage_location = item.storage_location;   	//库位
+				this.storehouse = item.storehouse;              	//仓库
+				this.applicant = item.applicant;
+				this.applicant_tel = item.applicant_tel;
 			}
 		},
 		onLoad(option) {
-			console.log(option)
 			this.getDeail(JSON.parse(option.item))
 		},
 		
@@ -84,7 +98,7 @@
 	// page{
 	// 	background:#607fcc ;
 	// }
-	.engineDetail{
+	.configDetail{
 		.line{
 			width: 100%;
 			height: 4rpx;

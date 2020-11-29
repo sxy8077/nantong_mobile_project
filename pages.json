@@ -183,7 +183,47 @@
                 "enablePullDownRefresh": false
             }
             
-        }
+        },
+		{
+			"path":"pages/fixedAssets/configure/configureDetail",
+			"style" :
+			{
+			    "navigationBarTitleText": "配置详情",
+			    "enablePullDownRefresh": false
+			}
+		},
+		{
+			"path":"pages/fixedAssets/allocation/allocationDeatil",
+			"style" :
+			{
+			    "navigationBarTitleText": "调拨详情",
+			    "enablePullDownRefresh": false
+			}
+		},
+		{
+			"path":"pages/fixedAssets/scrap/scrapDetail",
+			"style" :
+			{
+			    "navigationBarTitleText": "报废详情",
+			    "enablePullDownRefresh": false
+			}
+		},
+		{
+			"path":"pages/basicInfo/sensorInfo/sensorDetail",
+			"style" :
+			{
+			    "navigationBarTitleText": "传感器信息详情",
+			    "enablePullDownRefresh": false
+			}
+		},
+		{
+			"path":"pages/basicInfo/equipmentInfo/equipmentDetail",
+			"style" :
+			{
+			    "navigationBarTitleText": "设备信息详情",
+			    "enablePullDownRefresh": false
+			}
+		}
     ],
 	"globalStyle": {
 		"backgroundTextStyle": "light",

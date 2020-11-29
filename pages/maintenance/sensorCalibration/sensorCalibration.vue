@@ -68,6 +68,7 @@
 <script>
 	import { equipmentUrl, CalibrationMark,device } from '../../../util/urlList.js'
 	import uniCombox from "@/components/uni-combox/uni-combox"
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -144,7 +145,8 @@
 						deviceNum:this.equipmentCode
 					}
 				})
-				console.log(res.data)
+				// console.log(res.data)
+				uni.hideLoading();
 				this.remindData = [...this.remindData,...res.data.data];
 				this.count = res.data.count
 			},
@@ -161,6 +163,7 @@
 						size: this.size
 					}
 				})
+				uni.hideLoading();
 				if(res.data.count === 0){
 					uni.showToast({
 						icon: "none",
@@ -192,14 +195,16 @@
 			background2() {
 				this.color = "#5675c6";
 			},
-			search() {
+			search: throttle(function() {
+				uni.showLoading();
 				this.onsearch = true;
 				this.remindData = [],
 				this.count = 0;
 				this.currentPage = 1;
 				this.getPage();
-			},
-			reset() {
+			}),
+			reset: throttle(function() {
+				uni.showLoading();
 				this.sensorType = '';
 				this.begin_time = '选择查询';
 				this.end_time ='选择查询';
@@ -208,7 +213,7 @@
 				this.onsearch = false;
 				this.remindData= [];
 				this.getAllRemind();
-			},
+			}),
 			//时间格式
 			formatTime(time) {
 				let year = '' 
