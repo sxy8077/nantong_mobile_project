@@ -3,8 +3,8 @@
 		<!-- 搜索区 -->
 		<view class="gary">
 			<view class="header">
-				<span class="title">客户单位：</span>
-				<input class="input" type="text" maxlength="500rpx" confirm-type="search" v-model="client_unit" />
+				<view class="label"><span >客户单位:</span></view>
+				<input  type="text"  confirm-type="search" v-model="client_unit" />
 			</view>
 			<view class="button">
 				<button 
@@ -91,6 +91,7 @@
 <script>
 	import {  originalUrl,messageCUrl } from '../../../util/urlList.js'
 	import pop from '@/components/ming-pop/ming-pop.vue'
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		components:{pop},
 		data() {
@@ -100,7 +101,7 @@
 				         }],
 				src:'../../../static/icon/itemfont.png',	 
 				clientList:[],
-				currentPage: 1,
+				Page: 1,
 				size: 10,
 				count: 0,
 				onsearch: false,
@@ -127,6 +128,9 @@
 				})
 				/* console.log(res) */
 				this.clientList = res.data.results
+				/* console.log(2222,res.data.count) */
+				this.count = res.data.count;
+				uni.hideLoading();
 			},
 			//页面跳转
 			goMesDetail(aid){
@@ -135,18 +139,23 @@
 				})
 			},
 			//搜索框重置
-			reset() {
+			reset:throttle(function(){
+				uni.showLoading();
+				this.page = 1;
+				this.count = 0;
+				this.onsearch = false;
 				this.client_unit = '';
 				this.getClientunit();
-			},
+			}),
 			//点击搜索
-			search(){
+			search:throttle(function(){
+				uni.showLoading();
 				this.onsearch = true;
-				this.clientList = [],
+				/* this.clientList = [], */
 				this.count = 0;
 				this.currentPage = 1;
 				this.getsearch();
-			},
+			}),
 			background() {
 				this.color = "#dedede";
 			},
@@ -158,11 +167,21 @@
 				const res = await this.$myRequest({
 					url:messageCUrl,
 					data:{
+						size: this.size,
 						client_unit:this.client_unit
 					}
 				})
+				uni.hideLoading()
+				if(res.data.count === 0){
+					uni.showToast({
+						icon: "none",
+						title: "没有要查询的内容"
+					})
+				}
 				/* console.log(res) */
 				this.clientList = res.data.results
+				/* console.log(res.data.count) */
+				this.count = res.data.count;
 			},
 			//展示弹窗
 			addClient(){
@@ -235,39 +254,46 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	//搜索框部分样式
 	.gary{
-		width: 680rpx;
-		height: 300rpx;
-		border: 0.5px solid #DCDCDC;
-		border-radius: 30rpx;
+		box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
 		background: #f4f4f4;
-		margin: 60rpx 35rpx;
+		width: 650rpx;
+		padding: 20rpx;
+		margin: 20rpx auto;
+		border-radius: 30rpx;
 		.header{
-			margin-top: 20px;
-			margin-left: 40rpx;
-			.title{
-				font-size: 15px;
-				color:black;
+			margin-top: 50rpx;
+			display: flex;
+			.label{
+				background: #f4bd5b;
+				border-top-left-radius: 20rpx;
+				border-bottom-left-radius: 20rpx;
+				height: 60rpx;
+				width: 300rpx;
+				span {
+					margin-left: 30rpx;
+					font-size: 35rpx;
+					display: inline-block;
+					line-height: 60rpx;
+					height: 100%;
+					color: #fff;
+				}
 			}
-		}
-		.input{
-			text-align: left;
-			font-size: 40rpx;
-			height: 48rpx;
-			border: 1px solid #f4bd5b;
-			width: 600rpx;
-			border-radius: 10rpx;
-			background: #fff;
-			color: black;
-			margin-top: 10rpx;
+			input {
+				height: 56rpx;
+				font-size: 35rpx;
+				border: 1px solid #f4bd5b;
+				width: 100%;
+				background: #fff;
+			}
 		}
 		.button{
 			width: 650rpx;
 			display: flex;
 			flex-direction: row;
-			margin: 40rpx 20rpx;
+			margin: 50rpx 20rpx;
 		}
 		.yellow{
 			background: #f4bd5b;
@@ -283,20 +309,20 @@
 	}
 	//客户信息部分样式
 	.messages_list{
-		width: 680rpx;
-		height: auto;
-		border: 0.5px solid #DCDCDC;
-		border-radius: 30rpx;
+		box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
 		background: #f4f4f4;
-		margin: 60rpx 35rpx;
+		width: 650rpx;
+		padding: 20rpx;
+		margin: 30rpx auto;
+		border-radius: 30rpx;
 		.news{
-			font-size: 40rpx;
-			font-weight:bold;
+			margin-top: 20rpx;
+			font-size: 30rpx;
 			color: #3b466c;
-			margin: 40rpx 40rpx;
 		}
 		.line{
 			border-bottom: 2px solid #cccccc;
+			margin-top: 20rpx;
 		}
 		.messages_item{
 			width: 100%;

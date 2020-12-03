@@ -93,12 +93,12 @@
 
 <style lang="scss">
 	.block{
-		width: 680rpx;
+		width: 710rpx;
 		height: auto;
-		border: 1px solid black;
+		border: 1px solid #f4f4f4;
 		border-radius: 40rpx;
 		background: #f4f4f4;
-		margin: 60rpx 35rpx;
+		margin: 60rpx 20rpx;
 		.title{
 			font-size: 20px;
 			color: #607fcc;
@@ -113,9 +113,9 @@
 			.lines{
 				width: 660rpx;
 				height: 1rpx;
-				background:#cccccc;
+				background:#607fcc;
 				margin-top: 20rpx;
-				margin-left:10rpx ;
+				margin-left:25rpx ;
 			}
 			.content{
 				height: auto;

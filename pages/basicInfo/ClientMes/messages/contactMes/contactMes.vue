@@ -155,7 +155,7 @@
 		margin: 50rpx 220rpx;
 		text{
 			font-size: 40rpx;
-			color: #9eafdb;
+			color: #607fcc;
 		}
 	}
 	//查看联系人
@@ -166,7 +166,7 @@
 		.table2{
 			width:500rpx;
 			height: auto;
-			border: 1px solid #9eafdb;
+			border: 1px solid #607fcc;
 			border-radius: 30rpx;
 			margin: 20rpx 50rpx;
 			.contact{
@@ -185,7 +185,7 @@
 			}
 		}
 		.blue{
-			background: #9eafdb;
+			background: #607fcc;
 			color: white;
 			margin: 40rpx 200rpx;
 		}
@@ -209,7 +209,7 @@
 			.add{
 				font-size: 20rpx;
 				height: 40rpx;
-				border: 1px solid #9eafdb;
+				border: 1px solid #607fcc;
 				width: 360rpx;
 				border-radius: 4rpx;
 				background: #fff;

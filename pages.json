@@ -182,8 +182,6 @@
                 "navigationBarTitleText": "设备报废记录",
                 "enablePullDownRefresh": false
             }
-            
-<<<<<<< HEAD
         }
         ,{
             "path" : "pages/basicInfo/ClientMes/messages/contactMes/contactMes",
@@ -193,9 +191,8 @@
                 "enablePullDownRefresh": false
             }
             
-        }
-=======
         },
+       
 		{
 			"path":"pages/fixedAssets/configure/configureDetail",
 			"style" :
@@ -236,7 +233,6 @@
 			    "enablePullDownRefresh": false
 			}
 		}
->>>>>>> 9861277dbfea3dccf2a01adffdbf0bdd6f737d88
     ],
 	"globalStyle": {
 		"backgroundTextStyle": "light",

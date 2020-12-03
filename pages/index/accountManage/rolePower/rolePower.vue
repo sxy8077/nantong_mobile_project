@@ -20,28 +20,28 @@
 						<view class="b">
 							<text>客户信息查看</text>
 							<image 
-								style="width: 60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
 						<view class="b">
 							<text>主机信息查看</text>
 							<image 
-								style="width: 60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
 						<view class="b">
 							<text>传感器信息查看</text>
 							<image 
-								style="width: 60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
 						<view class="b">
 							<text>设备信息查看</text>
 							<image 
-								style="width: 60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
@@ -51,49 +51,49 @@
 						<view class="a">
 							<text>角色权限查看</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>客户信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>客户端管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>账户管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>主机信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>设备信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>传感器信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
@@ -107,28 +107,28 @@
 						<view class="b">
 							<text>客户信息查看</text>
 							<image 
-								style="width:60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
 						<view class="b">
 							<text>主机信息查看</text>
 							<image 
-								style="width: 60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
 						<view class="b">
 							<text>传感器信息查看</text>
 							<image 
-								style="width: 60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
 						<view class="b">
 							<text>设备信息查看</text>
 							<image 
-								style="width: 60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
@@ -136,21 +136,21 @@
 	                <view class="b">
 	                	<text>主机信息管理</text>
 	                	<image 
-	                		style="width: 60rpx;height:60rpx; "
+	                		style="width: 80rpx;height:40rpx; "
 	                		:mode="array.mode" :src="srcs">
 	                	</image>
 	                </view>
 	                <view class="b">
 	                	<text>设备信息管理</text>
 	                	<image 
-	                		style="width: 60rpx;height:60rpx; "
+	                		style="width: 80rpx;height:40rpx; "
 	                		:mode="array.mode" :src="srcs">
 	                	</image>
 	                </view>
 	                <view class="b">
 	                	<text>传感器信息管理</text>
 	                	<image 
-	                		style="width: 60rpx;height:60rpx; "
+	                		style="width: 80rpx;height:40rpx; "
 	                		:mode="array.mode" :src="srcs">
 	                	</image>
 	                </view>
@@ -159,28 +159,28 @@
 						<view class="a">
 							<text>角色权限查看</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>客户信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>客户端管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>账户管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
@@ -194,35 +194,35 @@
 	               	<view class="b">
 	               		<text>客户信息查看</text>
 	               		<image 
-	               			style="width: 60rpx;height:60rpx; "
+	               			style="width: 80rpx;height:40rpx; "
 	               			:mode="array.mode" :src="srcs">
 	               		</image>
 	               	</view>
 					<view class="b">
 						<text>客户信息管理</text>
 						<image 
-							style="width: 60rpx;height:60rpx; "
+							style="width: 80rpx;height:40rpx; "
 							:mode="array.mode" :src="srcs">
 						</image>
 					</view>
 	               	<view class="b">
 	               		<text>主机信息查看</text>
 	               		<image 
-	               			style="width: 60rpx;height:60rpx; "
+	               			style="width: 80rpx;height:40rpx; "
 	               			:mode="array.mode" :src="srcs">
 	               		</image>
 	               	</view>
 	               	<view class="b">
 	               		<text>传感器信息查看</text>
 	               		<image 
-	               			style="width: 60rpx;height:60rpx; "
+	               			style="width: 80rpx;height:40rpx; "
 	               			:mode="array.mode" :src="srcs">
 	               		</image>
 	               	</view>
 	               	<view class="b">
 	               		<text>设备信息查看</text>
 	               		<image 
-	               			style="width: 60rpx;height:60rpx; "
+	               			style="width: 80rpx;height:40rpx; "
 	               			:mode="array.mode" :src="srcs">
 	               		</image>
 	               	</view>
@@ -232,42 +232,42 @@
 				   	<view class="a">
 				   		<text>角色权限查看</text>
 				   		<image 
-				   			style="width: 44rpx;height:44rpx; "
+				   			style="width: 80rpx;height:40rpx;"
 				   			:mode="array.mode" :src="src">
 				   		</image>
 				   	</view>
 				   	<view class="a">
 				   		<text>客户端管理</text>
 				   		<image 
-				   			style="width: 44rpx;height:44rpx; "
+				   			style="width: 80rpx;height:40rpx;"
 				   			:mode="array.mode" :src="src">
 				   		</image>
 				   	</view>
 				   	<view class="a">
 				   		<text>账户管理</text>
 				   		<image 
-				   			style="width: 44rpx;height:44rpx; "
+				   			style="width: 80rpx;height:40rpx;"
 				   			:mode="array.mode" :src="src">
 				   		</image>
 				   	</view>
 					<view class="a">
 						<text>主机信息管理</text>
 						<image 
-							style="width: 44rpx;height:44rpx; "
+							style="width: 80rpx;height:40rpx;"
 							:mode="array.mode" :src="src">
 						</image>
 					</view>
 					<view class="a">
 						<text>设备信息管理</text>
 						<image 
-							style="width: 44rpx;height:44rpx; "
+							style="width: 80rpx;height:40rpx;"
 							:mode="array.mode" :src="src">
 						</image>
 					</view>
 					<view class="a">
 						<text>传感器信息管理</text>
 						<image 
-							style="width: 44rpx;height:44rpx; "
+							style="width: 80rpx;height:40rpx;"
 							:mode="array.mode" :src="src">
 						</image>
 					</view>
@@ -281,7 +281,7 @@
 						<view class="b">
 							<text>客户端管理</text>
 							<image 
-								style="width: 60rpx;height:60rpx; "
+								style="width: 80rpx;height:40rpx; "
 								:mode="array.mode" :src="srcs">
 							</image>
 						</view>
@@ -291,70 +291,70 @@
 						<view class="a">
 							<text>角色权限查看</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>客户信息查看</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>客户信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>账户管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>主机信息查看</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>传感器信息查看</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>设备信息查看</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>主机信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>设备信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
 						<view class="a">
 							<text>传感器信息管理</text>
 							<image 
-								style="width: 44rpx;height:44rpx; "
+								style="width: 80rpx;height:40rpx;"
 								:mode="array.mode" :src="src">
 							</image>
 						</view>
@@ -405,11 +405,17 @@
 		width: 680rpx;
 		height: auto;
 		border: 1rpx solid black;
-		margin: 40rpx 35rpx;
+		margin: 80rpx 35rpx;
 		background: white;
 		border-radius: 40rpx;
 		.swip{
-			margin-top: 50rpx;
+			width: 660rpx;
+			height: auto;
+			border: 1rpx solid white;
+			border-radius: 40rpx;
+			overflow:scroll ;
+			margin-top: 10rpx;
+			margin-left: 10rpx;
 		}
 	}
 		
@@ -423,10 +429,10 @@
 		width: 560rpx;
 		display: flex;
 		justify-content: space-between;
-		margin: 20rpx 60rpx;
+		margin: 10rpx 60rpx;
 		text{
 			font-size:30rpx;
-			line-height: 44rpx;
+			line-height: 40rpx;
 			color: black;
 		}	
 	}
@@ -434,14 +440,18 @@
 		width: 560rpx;
 		display: flex;
 		justify-content: space-between;
-		margin: 2rpx 60rpx;
+		margin: 10rpx 60rpx;
 		text{
 			font-size:30rpx;
-			line-height: 60rpx;
+			line-height: 40rpx;
 			color: black;
 		}	
 	}
+	.true{
+		margin-top: 100rpx;
+	}
 	.false{
+		margin-top: 80rpx;
 		margin-bottom: 80rpx;
 	}
 	

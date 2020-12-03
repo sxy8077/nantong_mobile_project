@@ -3,15 +3,15 @@
 		<!-- 搜索区 -->
 		<view class="gary">
 			<view class="account">
-				<span class="title">账户名：</span>
-				<input class="input" type="text" maxlength="500rpx" confirm-type="search"  v-model="account"/>
+				<view class="label"><span>账户名：</span></view>
+				<input  type="text"  confirm-type="search"  v-model="account"/>
 			</view>
-			<view class="roles">
-				<span class="title">角色：</span>
+			<view class="account">
+				<view class="label"><span class="title">角色：</span></view>
 				<picker 
 					mode="selector"
 					:range="allRolename"
-					class="input"
+					class="picker"
 					:value="role_name"
 					@change="getRolename"
 					:style="{ color: role_name===''? '#ccc' : null }"
@@ -39,15 +39,12 @@
 				<view class="line"></view>
 				<view class='setting'>
 					<image class="picture"
-						style="width: 80px;height:80px; " 
+						style="width: 60px;height:60px; " 
 						:mode="array.mode" :src="src" >
 					</image>
 					<view >
-						<view class="a">
-							<text>账户信息</text>
-							<view class="name">姓名:{{item.name}}</view>
-						</view>
 						<view class="mes">
+							<view class="name">姓名:{{item.name}}</view>
 							<view>账号:{{item.account}}</view>
 							<view>角色:{{getRoler(item)}}</view>
 						</view>
@@ -60,6 +57,8 @@
 
 <script>
 	import { user,role } from '../../../util/urlList.js'
+	import { getKeyByValue } from '../../../common/getKeyByValue.js'
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -73,11 +72,12 @@
 				count: 0,
 				color: '#5675c6',
 				onsearch: false,
-				rolesObject:null,
-				allRolename: ["设备维护","设备管理","客户经理","客户"],
+				rolesObject:{},
+				allRolename: [ "设备维护","设备管理","客户经理","客户"],
 				role_name: '',
 				account:'',
-				role_id:null
+				role_id:'',
+				key:''
 			}
 		},
 		methods: {
@@ -102,14 +102,14 @@
 				for (let i = 0; i < res.data.length; i++) {
 				   rolesObject[res.data[i]['aid']] = res.data[i]['role_name']
 				}
-				/* console.log(222,rolesObject)拿到四种角色的键值对  这个对象*/
+				//console.log(222,rolesObject)/* 拿到四种角色的键值对  这个对象 */
 				this.rolesObject = rolesObject
 			},
 			//这里的item为accountList的item
 			getRoler(item) {
 				if (this.rolesObject) {
 				       return this.rolesObject[item['role_id']]
-				     }
+				    }
 				 return ''
 			},
 			//下拉框选择内容
@@ -124,13 +124,14 @@
 				})
 			},
 			//搜索
-			/* search(){
+			search: throttle(function(){
+				uni.showLoading();
 				this.onsearch = true;
-				
 				this.count = 0;
 				this.currentPage = 1;
+				this.getRoleids()
 				this.getsearch();
-			}, */
+			}),
 			background() {
 				this.color = "#dedede";
 			},
@@ -138,7 +139,8 @@
 				this.color = "#5675c6";
 			},
 			//重置
-			reset(){
+			reset: throttle(function(){
+				uni.showLoading();
 				this.account='',
 				this.currentPage = 1;
 				this.count = 0;
@@ -146,8 +148,7 @@
 				this.role_name='',
 				this.getaccount()
 				this.getrole()
-				this.getRoler()
-			},
+			}),
 			//获取搜索内容
 			async getsearch(){
 				const res = await this.$myRequest({
@@ -155,18 +156,30 @@
 					data:{
 						size:this.size,
 						account:this.account,
-					
+						role_id:this.key
 					}
 				})
+				uni.hideLoading()
+				if(res.data.count === 0){
+					uni.showToast({
+						icon: "none",
+						title: "没有要查询的内容"
+					})
+				}
 				/* console.log(22222,res) */
-				this.clientList = res.data.results
+				this.accountList = res.data.results
+				this.count = res.data.count;
 			},
-			
+			//拿到role_id
+			getRoleids(){
+				this.key = getKeyByValue(this.rolesObject,this.allRolename[this.role_name]);
+			}
 		},
+		
 		onLoad(){
 			this.getaccount()
 			this.getrole()
-			this.getsearch()
+			this.getsearch()	
 		}
 	}
 </script>
@@ -174,63 +187,53 @@
 <style lang="scss">
 	//搜索区域样式
 	.gary{
-		width: 680rpx;
-		height: auto;
-		border: 0.5px solid #DCDCDC;
-		border-radius: 30rpx;
+		box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
 		background: #f4f4f4;
-		margin: 60rpx 35rpx;
+		width: 650rpx;
+		padding: 20rpx;
+		margin: 20rpx auto;
+		border-radius: 30rpx;
 		.account{
-			width: 610rpx;
-			margin-top: 25px;
-			margin-left: 35rpx;
+			margin-top: 30rpx;
 			display: flex;
-			justify-content: space-between;
-			.title{
-				line-height: 80rpx;
-				font-size: 15px;
-				color:black;
+			.label{
+				background: #f4bd5b;
+				border-top-left-radius: 20rpx;
+				border-bottom-left-radius: 20rpx;
+				height: 60rpx;
+				width: 300rpx;
+				span {
+					margin-left: 30rpx;
+					font-size: 35rpx;
+					display: inline-block;
+					line-height: 60rpx;
+					height: 100%;
+					color: #fff;
+				}
 			}
-			.input{
-				text-align: left;
-				font-size: 40rpx;
-				height: 48rpx;
+			input {
+				height: 56rpx;
+				font-size: 35rpx;
 				border: 1px solid #f4bd5b;
-				width: 480rpx;
-				border-radius: 10rpx;
+				width: 100%;
 				background: #fff;
-				color: black;
-				margin-top: 10rpx;
 			}
-		}
-		.roles{
-				width: 610rpx;
-				margin-left: 35rpx;
-				display: flex;
-				justify-content: space-between;
-				.title{
-					line-height: 80rpx;
-					font-size: 15px;
-					color:black;
-				}
-				.input{
-					text-align: left;
-					font-size: 40rpx;
-					height: 48rpx;
-					border: 1px solid #f4bd5b;
-					width: 480rpx;
-					border-radius: 10rpx;
-					background: #fff;
-					color: black;
-					margin-top: 10rpx;
-				}
+			.picker{
+				height: 56rpx;
+				font-size: 35rpx;
+				border: 1px solid #f4bd5b;
+				width: 100%;
+				background: #fff;
+				line-height: 50rpx;
+				text-align: center;
+			}
 		}
 		.button{
 			width: 650rpx;
 			display: flex;
 			flex-direction: row;
 			margin-top: 40rpx;
-			margin-bottom: 40rpx;
+			margin-bottom: 30rpx;
 		}
 		.border{
 			border: 1px solid #607fcc;
@@ -242,12 +245,12 @@
 	}
 	//账户信息部分样式
 	.messages_list{
-		width: 680rpx;
-		height: auto;
-		border: 0.5px solid #DCDCDC;
-		border-radius: 30rpx;
+		box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
 		background: #f4f4f4;
-		margin: 60rpx 35rpx;
+		width: 650rpx;
+		padding: 20rpx;
+		margin: 30rpx auto;
+		border-radius: 30rpx;
 		.role{
 			border: 1rpx solid #607fcc;
 			background: #607fcc;
@@ -271,19 +274,9 @@
 				.picture{
 					margin: 15px 10px 15px 15px;
 				}
-				.a{
-					width: auto;
-					display: flex;
-					flex-direction: row;
-					margin: 15px 10px 0 10px;
-					line-height: 30px;
-					.name{
-						margin-left: 40rpx;
-					}
-				}
 			}
 			.mes{
-				margin-top:10rpx;
+				margin-top:20rpx;
 				margin-left: 10px;
 				line-height: 50rpx;
 			}
