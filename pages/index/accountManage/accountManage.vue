@@ -140,7 +140,6 @@
 			},
 			//重置
 			reset: throttle(function(){
-				uni.showLoading();
 				this.account='',
 				this.currentPage = 1;
 				this.count = 0;
