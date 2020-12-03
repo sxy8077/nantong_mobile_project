@@ -184,10 +184,31 @@
             }
             
         }
+        ,{
+            "path" : "pages/ClientMaintenance/ClientMaintenance",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "循环水智慧管家远程监控系统",
+                "enablePullDownRefresh": false,
+				"navigationBarShadow":{
+					"colorType":"blue"
+				}
+            }
+            
+        }
+        ,{
+            "path" : "pages/maintenance/equipmentControl/equipmentControl",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "设备控制",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#607fcc",
+		"navigationBarBackgroundColor": "#8cabd1",
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "login-template",
 		"app-plus":{
@@ -206,6 +227,7 @@
 			}
 			,{
 				"text":"运维",
+				// "pagePath":"pages/ClientMaintenance/ClientMaintenance",
 				"pagePath":"pages/maintenance/maintenance",
 				"iconPath":"static/icon/maintenance.png",
 				"selectedIconPath":"static/icon/maintenance-active.png"

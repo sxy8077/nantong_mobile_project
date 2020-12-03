@@ -123,7 +123,7 @@
 		/* #endif */
 		flex-direction: row;
 		position: relative;
-		padding: $uni-spacing-col-base;
+		// padding: $uni-spacing-col-base;
 		background-color: $uni-bg-color;
 	}
 
@@ -176,6 +176,7 @@
 
 	.uni-searchbar__cancel {
 		padding-left: 10px;
+		padding-right: 5px;
 		line-height: $uni-searchbar-height;
 		font-size: 14px;
 		color: $uni-text-color;
