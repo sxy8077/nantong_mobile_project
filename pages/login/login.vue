@@ -1,4 +1,3 @@
-
 <template>
 	<form class='loginView' @submit="bindLogin">
         <view class="input-box">
@@ -59,23 +58,23 @@
 			        //     return;
 			        // }
 			
-			        if (password.length < 6) {
+			        /* if (password.length < 6) {
 			            this.loading = false;
 			            uni.showModal({
 			                content: "密码大于5位",
 			                showCancel: false
 			            })
 			            return;
-			        }
+			        } */
 			
 			        uni.request({
-			            url: `${this.$serverUrl}/login.php`,
-			            header: {
-			                "Content-Type": "application/x-www-form-urlencoded"
-			            },
+			            url: `${this.$serverUrl}app/login_in/`,
+			            // header: {
+			            //     "Content-Type": "application/x-www-form-urlencoded"
+			            // },
 			            data: {
-			                "username": name,
-			                "password": password
+			                account: name,
+			                password: password
 			            },
 			            method: "POST",
 			            success: (e) => {
@@ -87,7 +86,7 @@
 			                    });
 			                    return;
 			                }
-			                if (e.data.code === 0) {
+			                if (e.data.msg === "登陆成功") {
 			                    this.login(e.data);
 								// uni.redirectTo({
 								// 	url:'../index/index'

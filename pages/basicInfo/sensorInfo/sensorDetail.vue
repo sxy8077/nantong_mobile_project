@@ -1,35 +1,50 @@
 <template>
-	<view class="engineDetail">
+	<view class="sensorDetail">
 		<view class="line"></view>
 		<view class="block">
 			<view class="title">
-				<text>主机信息</text>
+				<text>传感器信息</text>
 			</view>
 			<view class="table">
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">主机编号:</view>
-					<view class="message">{{engine_code}}</view>
+					<view class="name">传感器编号:</view>
+					<view class="message">{{sensor_code}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">主机名称:</view>
-					<view class="message">{{engine_name}}</view>
+					<view class="name">传感器类型:</view>
+					<view class="message">{{type_name}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">开始生产时间:</view>
-					<view class="message">{{begin_time}}</view>
+					<view class="name">传感器型号:</view>
+					<view class="message">{{sensor_model}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">结束生产时间:</view>
-					<view class="message">{{end_time}}</view>
+					<view class="name">标定理论值:</view>
+					<view class="message">{{theoretical_value}}</view>
+				</view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">默认补偿值:</view>
+					<view class="message">{{default_compensation}}</view>
+				</view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">传感器阈值:</view>
+					<view class="message">{{sensor_threshold}}</view>
+				</view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">提示内容:</view>
+					<view class="message">{{notice_content}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
 					<view class="name">状态:</view>
-					<view class="message">{{status}}</view>
+					<view class="message" :style="{ color: status==='报废' ? 'red' : null }">{{status}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
@@ -47,33 +62,40 @@
 	export default {
 		data() {
 			return {
-				engine_code: "",
-				engine_name: "",
-				begin_time: "",
-				end_time: "",
-				note: "",
+				type_name: "",
+				sensor_model: "",
+				sensor_code: "",
+				sensor_threshold: "",
+				theoretical_value: "",
+				notice_content: "",
+				default_compensation: "",
 				status: "",
+				note: "",
 			}
 		},
 		methods: {
 			getDeail(item){
-				this.engine_code = item.engine_code;
-				this.engine_name = item.engine_name;
-				this.begin_time = item.begin_time;
-				this.end_time = item.end_time;
-				this.note = item.note;
-				this.status = this.statusSWift(item.status);
+				this.type_name = item.type_name;
+				this.sensor_model = item.sensor_model;
+				this.sensor_code = parseInt(item.sensor_code, 0);
+				this.sensor_threshold = item.sensor_threshold;
+				this.theoretical_value = item.theoretical_value;
+				this.notice_content = item.notice_content;
+				this.default_compensation = item.default_compensation;
+				this.status = this.statusSwift(item.status);
+				this.note = item.note;;
 			},
-			statusSWift(status) {
-				if(status === '1'){
-				  return '在产'
-				}else if(status === '0'){
-				  return '停产'
+			statusSwift: function(value) {
+				if(value === '0'){
+					return '报废'
+				}else if(value === '1'){
+					return '正在使用'
+				}else if(value === '2'){
+					return '未使用'
 				}
 			}
 		},
 		onLoad(option) {
-			console.log(option)
 			this.getDeail(JSON.parse(option.item))
 		},
 		
@@ -84,7 +106,7 @@
 	// page{
 	// 	background:#607fcc ;
 	// }
-	.engineDetail{
+	.sensorDetail{
 		.line{
 			width: 100%;
 			height: 4rpx;

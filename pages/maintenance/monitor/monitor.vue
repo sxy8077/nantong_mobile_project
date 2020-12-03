@@ -69,8 +69,8 @@
 							</picker>
 						</view>
 						<view class="action">
-							<view class="search" @click="search">搜索</view>
-							<view class="reset" @click="reset">重置</view>
+							<button class="search" @click="search">搜索</button>
+							<button class="reset" @click="reset">重置</button>
 						</view>
 						<line-pic :canvasData="chooseData(listItem)" :id='listItem' ></line-pic>
 					</view>
@@ -120,6 +120,7 @@
 	import tTh from '@/components/t-table/t-th.vue';
 	import tTr from '@/components/t-table/t-tr.vue';
 	import tTd from '@/components/t-table/t-td.vue';
+	import { throttle } from '@/common/throttle.js'
 	import navTab from '../../../components/navTab.vue';
 	import linePic from '../../../components/LinePic.vue';
 	import { equipmentUrl, device, sensorDataUrl, equipmentInfoUrl, ClientWaterRemindUrl,equipMaintainUrl } from '../../../util/urlList.js'
@@ -194,15 +195,17 @@
 				}
 			},
 			//重置
-			reset() {
+			reset:throttle(function() {
+				uni.showLoading();
 				this.begin_time = '选择查询';
 				this.end_time = '选择查询';
 				this.getAllSensorData()
-			},
+			}),
 			//搜索
-			async search() {
-				this.getAllSensorData()
-			},
+			 search:throttle(function() {
+				 uni.showLoading();
+				 this.getAllSensorData()
+			 }),
 			//获得设备数据
 			async getEquipmentData() {
 				const res = await this.$myRequest({
@@ -269,6 +272,7 @@
 						'end_time': this.end_time==="选择查询" ? null : this.end_time,
 					}
 				})
+				uni.hideLoading();
 				this.handleData(res.data)
 			},
 			//处理获得的数据

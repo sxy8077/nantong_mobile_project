@@ -89,7 +89,7 @@
 		position: relative;
 	}
 	.swiper-nav::-webkit-scrollbar {
-		display:none
+		display:none;
 	}
 	.swiper-nav-list {
 		transition: .5s;

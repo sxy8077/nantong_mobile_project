@@ -1,40 +1,50 @@
 <template>
-	<view class="engineDetail">
+	<view class="allocationDetail">
 		<view class="line"></view>
 		<view class="block">
 			<view class="title">
-				<text>主机信息</text>
+				<text>设备调拨详情</text>
 			</view>
 			<view class="table">
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">主机编号:</view>
-					<view class="message">{{engine_code}}</view>
+					<view class="name">设备编号:</view>
+					<view class="message">{{equipment_code}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">主机名称:</view>
-					<view class="message">{{engine_name}}</view>
+					<view class="name">调拨时间:</view>
+					<view class="message">{{applicant_time}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">开始生产时间:</view>
-					<view class="message">{{begin_time}}</view>
+					<view class="name">调拨人:</view>
+					<view class="message">{{applicant}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">结束生产时间:</view>
-					<view class="message">{{end_time}}</view>
+					<view class="name">调拨人电话:</view>
+					<view class="message">{{applicant_tel}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">状态:</view>
-					<view class="message">{{status}}</view>
+					<view class="name">调入单位:</view>
+					<view class="message">{{transfer_unit}}</view>
 				</view>
 				<view class="lines"></view>
 				<view class="content">
-					<view class="name">备注:</view>
-					<view class="message">{{note}}</view>
+					<view class="name">调入单位电话:</view>
+					<view class="message">{{transfer_unit_tel}}</view>
+				</view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">调入单位地址:</view>
+					<view class="message">{{transfer_unit_ads}}</view>
+				</view>
+				<view class="lines"></view>
+				<view class="content">
+					<view class="name">调入原因:</view>
+					<view class="message"></view>
 				</view>
 				<view style="margin-bottom: 30rpx;"></view>
 			</view>
@@ -47,33 +57,29 @@
 	export default {
 		data() {
 			return {
-				engine_code: "",
-				engine_name: "",
-				begin_time: "",
-				end_time: "",
-				note: "",
-				status: "",
+				applicant_time: "",
+				equipment_code: "",
+				applicant: "",
+				applicant_tel: "",
+				transfer_unit: "",
+				transfer_unit_tel: "",
+				transfer_unit_ads: "",
+				allocation_reason: "", 
 			}
 		},
 		methods: {
 			getDeail(item){
-				this.engine_code = item.engine_code;
-				this.engine_name = item.engine_name;
-				this.begin_time = item.begin_time;
-				this.end_time = item.end_time;
-				this.note = item.note;
-				this.status = this.statusSWift(item.status);
-			},
-			statusSWift(status) {
-				if(status === '1'){
-				  return '在产'
-				}else if(status === '0'){
-				  return '停产'
-				}
+				this.applicant_time = item.applicant_time;
+				this.equipment_code = item.equipment_code;
+				this.applicant = item.applicant;
+				this.applicant_tel = item.applicant_tel;
+				this.transfer_unit = item.transfer_unit;
+				this.transfer_unit_tel = item.transfer_unit_tel;
+				this.transfer_unit_ads = item.transfer_unit_ads;
+				this.allocation_reason = item.allocation_reason;
 			}
 		},
 		onLoad(option) {
-			console.log(option)
 			this.getDeail(JSON.parse(option.item))
 		},
 		
@@ -84,7 +90,7 @@
 	// page{
 	// 	background:#607fcc ;
 	// }
-	.engineDetail{
+	.allocationDetail{
 		.line{
 			width: 100%;
 			height: 4rpx;

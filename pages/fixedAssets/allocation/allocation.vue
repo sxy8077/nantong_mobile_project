@@ -45,7 +45,7 @@
 		</view>
 		<view class="item">
 			<view class="title">设备调拨记录表：</view>
-			<view class="list" v-for="item in allocationInfo" :key="item.aid">
+			<view class="list" v-for="item in allocationInfo" :key="item.aid" @click="goDetail(item)">
 				<view class="line"></view>
 				<view class="listitem">
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
@@ -63,6 +63,7 @@
 
 <script>
 	import { equipmentAllocation } from '../../../util/urlList.js'
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -90,21 +91,21 @@
 							return;
 					}
 				},
-				search() {
+				search: throttle(function(){
 					uni.showLoading();
 					this.onsearch = true;
 					this.allocationInfo = [],
 					this.count = 0;
 					this.currentPage = 1;
 					this.getPage();
-				},
+				}),	
 				background() {
 					this.color = "#dedede";
 				},
 				background2() {
 					this.color = "#5675c6";
 				},
-				reset() {
+				reset: throttle(function(){
 					uni.showLoading();
 					this.begin_time = '选择查询';
 					this.end_time ='选择查询';
@@ -114,7 +115,7 @@
 					this.onsearch = false;
 					this.allocationInfo= [];
 					this.getList();
-				},
+				}),
 				//获取所有信息
 				async getList() {
 					const res = await this.$myRequest({
@@ -148,6 +149,11 @@
 					this.allocationInfo = [...this.allocationInfo,...res.data.data];
 					this.count = res.data.count;
 				},
+				goDetail(item){
+					uni.navigateTo({
+						url: "./allocationDeatil?item=" + encodeURIComponent(JSON.stringify(item)),	
+					})
+				}
 		},
 		onLoad() {
 			this.getList();

@@ -9,6 +9,20 @@
 				<view class="label"><span>主机编号：</span></view>
 				<input type="text" v-model="engine_code" />
 			</view>
+			<view class="searchitem">
+				<view class="label"><span>状态：</span></view>
+				<picker
+					mode="selector" 
+					:range="allStatus" 
+					range-key="name"
+					:value="status"
+					class="picker" 
+					@change="getstatus"
+					:style="{ color: status==='选择查询'? '#ccc' : null }"
+				>
+					<view>{{status | statusSwift}}</view>
+				</picker>
+			</view>
 			<view class="button">
 				<button 
 					type="default"
@@ -24,13 +38,14 @@
 		</view>
 		<view class="item">
 			<view class="title">设备信息表：</view>
-			<view class="list" v-for="item in configureInfo" :key="item.aid">
+			<view class="list" v-for="item in configureInfo" :key="item.aid" @click="goDetail(item)">
 				<view class="line"></view>
 				<view class="listitem">
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
 					<view class="text">
 						<view>设备编号：{{item.equipment_code}}</view>
 						<view>主机编号：{{item.engine_code}}</view>
+						<view :style="{ color: item.status==='2' ? 'red' : null }">设备状态：{{item.status | statusSwift}}</view>
 					</view>
 				</view>
 			</view>
@@ -41,6 +56,8 @@
 
 <script>
 	import { epuipmentInfoUrl } from '../../../util/urlList.js'
+	import { throttle } from '@/common/throttle.js'
+	
 	export default {
 		data() {
 			return {
@@ -52,76 +69,113 @@
 				color: '#5675c6',
 				onsearch: false,
 				configureInfo: [],
+				status: '选择查询',
+				allStatus: [
+					{id: 0, name: '在线'},
+					{id: 1, name: '停运'},
+					{id: 2, name: '报废'},
+					{id: 3, name: '报修'},
+					{id: 4, name: '维护'},
+				],
 			}
 		},
+		filters:{
+			statusSwift: function(value) {
+			    if(value === '0'){
+			      return '在线'
+			    }else if(value === '1'){
+			      return '停运'
+			    }else if(value === '2'){
+			      return '报废'
+			    }else if(value === '3'){
+			      return '报修'
+			    }else if(value === '4'){
+			      return '维护'
+			    }else if(value === '选择查询'){
+					return '选择查询'
+				}
+			  }
+		},
 		methods: {
-				getdate(e, name) {
-					switch(name){
-						case 'begin_time': 
-							this.begin_time = e.detail.value;
-							break;
-						case 'end_time' :
-							this.end_time = e.detail.value;
-							break;
-						default :
-							return;
+			getstatus(e) {
+				this.status = e.detail.value.toString();
+			},
+			getdate(e, name) {
+				switch(name){
+					case 'begin_time': 
+						this.begin_time = e.detail.value;
+						break;
+					case 'end_time' :
+						this.end_time = e.detail.value;
+						break;
+					default :
+						return;
+				}
+			},
+			search: throttle(function(){
+				uni.showLoading();
+				this.onsearch = true;
+				this.configureInfo = [],
+				this.count = 0;
+				this.currentPage = 1;
+				this.getPage();
+			}),
+				
+			background() {
+				this.color = "#dedede";
+			},
+			background2() {
+				this.color = "#5675c6";
+			},
+			reset: throttle(function(){
+				uni.showLoading();
+				this.status = '选择查询',
+				this.equipment_code = '';
+				this.engine_code ='';
+				this.currentPage = 1;
+				this.count = 0;
+				this.onsearch = false;
+				this.configureInfo= [];
+				this.getList();
+			}),
+			
+			//获取所有信息
+			async getList() {
+				const res = await this.$myRequest({
+					url: epuipmentInfoUrl,
+					data: {currentPage: this.currentPage, size: this.size}
+				})
+				uni.hideLoading();
+				this.configureInfo = [...this.configureInfo,...res.data.data];
+				this.count = res.data.count;
+			},
+			//获取搜索内容
+			async getPage() {
+				const res = await this.$myRequest({
+					url: epuipmentInfoUrl,
+					data: {
+						engine_code: this.engine_code,
+						equipment_code: this.equipment_code,
+						currentPage: this.currentPage,
+						size: this.size,
+						status: this.status==="选择查询" ? null : this.status,
 					}
-				},
-				search() {
-					uni.showLoading();
-					this.onsearch = true;
-					this.configureInfo = [],
-					this.count = 0;
-					this.currentPage = 1;
-					this.getPage();
-				},
-				background() {
-					this.color = "#dedede";
-				},
-				background2() {
-					this.color = "#5675c6";
-				},
-				reset() {
-					uni.showLoading();
-					this.equipment_code = '';
-					this.engine_code ='';
-					this.currentPage = 1;
-					this.count = 0;
-					this.onsearch = false;
-					this.configureInfo= [];
-					this.getList();
-				},
-				//获取所有信息
-				async getList() {
-					const res = await this.$myRequest({
-						url: epuipmentInfoUrl,
-						data: {currentPage: this.currentPage, size: this.size}
+				})
+				uni.hideLoading();
+				if(res.data.count === 0){
+					uni.showToast({
+						icon: "none",
+						title: "没有要查询的内容"
 					})
-					uni.hideLoading();
-					this.configureInfo = [...this.configureInfo,...res.data.data];
-					this.count = res.data.count;
-				},
-				//获取搜索内容
-				async getPage() {
-					const res = await this.$myRequest({
-						url: epuipmentInfoUrl,
-						data: {
-							engine_code: this.engine_code,
-							equipment_code: this.equipment_code,
-							currentPage: this.currentPage,
-							size: this.size
-						}
-					})
-					uni.hideLoading();
-					if(res.data.count === 0){
-						uni.showToast({
-							icon: "none",
-							title: "没有要查询的内容"
-						})
-					}
-					this.configureInfo = [...this.configureInfo,...res.data.data];
-					this.count = res.data.count;
-				},
+				}
+				this.configureInfo = [...this.configureInfo,...res.data.data];
+				this.count = res.data.count;
+			},
+			goDetail(item){
+				uni.navigateTo({
+					url: "./equipmentDetail?item=" + encodeURIComponent(JSON.stringify(item)),	
+				})
+			}
 		},
 		onLoad() {
 			this.getList();
@@ -204,6 +258,15 @@
 					width: 100%;
 					background: #fff;
 				}
+				.picker{
+					height: 57rpx;
+					font-size: 35rpx;
+					border: 1px solid #f4bd5b;
+					width: 100%;
+					background: #fff;
+					line-height: 55rpx;
+					text-align: center;
+				}
 			}
 			.button{
 				margin-top: 30rpx;
@@ -247,8 +310,11 @@
 						margin-right: 40rpx;
 					}
 					.text{
-						view:nth-child(2){
+						view{
 							margin-top: 20rpx;
+						}
+						view:nth-child(1){
+							margin-top: 0rpx;
 						}
 					}
 				}

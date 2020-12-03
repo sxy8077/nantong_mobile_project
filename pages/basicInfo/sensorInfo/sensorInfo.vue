@@ -62,13 +62,14 @@
 		</view>
 		<view class="item">
 			<view class="title">传感器表：</view>
-			<view class="list" v-for="item in allSensorInfo" :key="item.aid">
+			<view class="list" v-for="item in allSensorInfo" :key="item.aid" @click="goDetail(item)">
 				<view class="line"></view>
 				<view class="listitem">
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
 					<view class="text">
 						<view>传感器编号：{{item.sensor_code}}</view>
 						<view>传感器类型：{{item.type_name}}</view>
+						<view :style="{ color: item.status==='0' ? 'red' : null }">状态：{{item.status | statusSwift}}</view>
 					</view>
 				</view>
 			</view>
@@ -81,6 +82,7 @@
 	import { sensorInfoUrl } from '../../../util/urlList.js'
 	import { addSensorTypeUrl } from '../../../util/urlList.js'
 	import { addSensorModelUrl } from '../../../util/urlList.js'
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -101,89 +103,97 @@
 				sensor_model: '选择查询',
 				status: '选择查询',
 				sensor_code: '',
+				status_con: '',
 			}
 		},
 		methods: {
-				search() {
-					this.onsearch = true;
-					this.allSensorInfo = [],
-					this.count = 0;
-					this.currentPage = 1;
-					this.getPage();
-				},
-				getstatus(e) {
-					this.status = e.detail.value.toString();
-				},
-				chooseSensorType(e) {
-					this.type_name = this.allTypeName[e.detail.value].type_name;
-				},
-				chooseSensorModel(e) {
-					this.sensor_model = this.allModelName[e.detail.value].sensor_model;
-				},
-				background() {
-					this.color = "#dedede";
-				},
-				background2() {
-					this.color = "#5675c6";
-				},
-				reset() {
-					this.currentPage = 1;
-					this.count = 0;
-					this.onsearch = false;
-					this.allSensorInfo= [];
-					this.type_name = '选择查询',
-					this.sensor_model = '选择查询',
-					this.status = '选择查询',
-					this.sensor_code = '',
-					this.getList();
-				},
-				//获取所有信息
-				async getList() {
-					uni.showLoading();
-					const res = await this.$myRequest({
-						url: sensorInfoUrl,
-						data: {currentPage: this.currentPage, size: this.size}
-					})
-					uni.hideLoading();
-					this.allSensorInfo = [...this.allSensorInfo,...res.data.data];
-					this.count = res.data.count;
-				},
-				//获取搜索内容
-				async getPage() {
-					uni.showLoading();
-					const res = await this.$myRequest({
-						url: sensorInfoUrl,
-						data: {
-							type_name: this.type_name==="选择查询" ? null : this.type_name,
-							sensor_model: this.sensor_model==="选择查询" ? null : this.sensor_model,
-							status: this.status==="选择查询" ? null : this.status,
-							sensor_code: this.sensor_code,
-							currentPage: this.currentPage,
-							size: this.size
-						}
-					})
-					uni.hideLoading();
-					if(res.data.count === 0){
-						uni.showToast({
-							icon: "none",
-							title: "没有要查询的内容"
-						})
+			search: throttle(function(){
+				uni.showLoading();
+				this.onsearch = true;
+				this.allSensorInfo = [],
+				this.count = 0;
+				this.currentPage = 1;
+				this.getPage();
+			}),
+			
+			getstatus(e) {
+				this.status = e.detail.value.toString();
+			},
+			chooseSensorType(e) {
+				this.type_name = this.allTypeName[e.detail.value].type_name;
+			},
+			chooseSensorModel(e) {
+				this.sensor_model = this.allModelName[e.detail.value].sensor_model;
+			},
+			background() {
+				this.color = "#dedede";
+			},
+			background2() {
+				this.color = "#5675c6";
+			},
+			reset: throttle(function(){
+				uni.showLoading();
+				this.currentPage = 1;
+				this.count = 0;
+				this.onsearch = false;
+				this.allSensorInfo= [];
+				this.type_name = '选择查询',
+				this.sensor_model = '选择查询',
+				this.status = '选择查询',
+				this.sensor_code = '',
+				this.getList();
+			}),
+			
+			//获取所有信息
+			async getList() {
+				const res = await this.$myRequest({
+					url: sensorInfoUrl,
+					data: {currentPage: this.currentPage, size: this.size}
+				})
+				uni.hideLoading();
+				this.allSensorInfo = [...this.allSensorInfo,...res.data.data];
+				this.count = res.data.count;
+			},
+			//获取搜索内容
+			async getPage() {
+				const res = await this.$myRequest({
+					url: sensorInfoUrl,
+					data: {
+						type_name: this.type_name==="选择查询" ? null : this.type_name,
+						sensor_model: this.sensor_model==="选择查询" ? null : this.sensor_model,
+						status: this.status==="选择查询" ? null : this.status,
+						sensor_code: this.sensor_code,
+						currentPage: this.currentPage,
+						size: this.size
 					}
-					this.allSensorInfo = [...this.allSensorInfo,...res.data.data];
-					this.count = res.data.count;
-				},
-				async getSensorType(){
-					const res = await this.$myRequest({
-						url: addSensorTypeUrl,
+				})
+				uni.hideLoading();
+				if(res.data.count === 0){
+					uni.showToast({
+						icon: "none",
+						title: "没有要查询的内容"
 					})
-					this.allTypeName = res.data
-				},
-				async getSensorModel(){
-					const res = await this.$myRequest({
-						url: addSensorModelUrl,
-					})
-					this.allModelName = res.data;
 				}
+				this.allSensorInfo = [...this.allSensorInfo,...res.data.data];
+				this.count = res.data.count;
+			},
+			async getSensorType(){
+				const res = await this.$myRequest({
+					url: addSensorTypeUrl,
+				})
+				this.allTypeName = res.data
+			},
+			async getSensorModel(){
+				const res = await this.$myRequest({
+					url: addSensorModelUrl,
+				})
+				this.allModelName = res.data;
+			},
+			goDetail(item){
+				uni.navigateTo({
+					url: "./sensorDetail?item=" + encodeURIComponent(JSON.stringify(item)),	
+				})
+			}
 		},
 		filters: {
 			statusSwift: function(value) {
@@ -287,7 +297,7 @@
 					border: 1px solid #f4bd5b;
 					width: 100%;
 					background: #fff;
-					line-height: 50rpx;
+					line-height: 55rpx;
 					text-align: center;
 				}
 			}

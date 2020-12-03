@@ -3,8 +3,8 @@
 		<!-- 搜索区 -->
 		<view class="gary">
 			<view class="header">
-				<span class="title">客户单位：</span>
-				<input class="input" type="text" maxlength="500rpx" confirm-type="search" v-model="client_unit" />
+				<view class="label"><span >客户单位:</span></view>
+				<input  type="text"  confirm-type="search" v-model="client_unit" />
 			</view>
 			<view class="button">
 				<button 
@@ -23,39 +23,39 @@
 				<view class="pops">
 					<view class="addClient">
 						<span style="height: 40rpx;">客户编号:</span>
-						<input  class="add" v-model="inputValue.client_code"/>
+						<input  class="add" v-model="client_code"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">客户单位:</span>
-						<input  class="add" v-model="inputValue.client_unit"/>
+						<input  class="add" v-model="client_unit"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">客户地址:</span>
-						<input  class="add" v-model="inputValue.client_address"/>
+						<input  class="add" v-model="client_address"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">客户邮编:</span>
-						<input  class="add" v-model="inputValue.client_zip_code"/>
+						<input  class="add" v-model="client_zip_code"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">客户行业:</span>
-						<input  class="add" v-model="inputValue.client_industry"/>
+						<input  class="add" v-model="client_industry"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">单位电话:</span>
-						<input  class="add" v-model="inputValue.unit_phone"/>
+						<input  class="add" v-model="unit_phone"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">单位传真:</span>
-						<input  class="add" v-model="inputValue.unit_fax"/>
+						<input  class="add" v-model="unit_fax"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">地区:</span>
-						<input  class="add" v-model="inputValue.region"/>
+						<input  class="add" v-model="region"/>
 					</view>
 					<view class="addClient">
 						<span style="height: 40rpx;">备注:</span>
-						<input  class="add" v-model="inputValue.note"/>
+						<input  class="add" v-model="note"/>
 					</view>
 					<view class="save">
 						<button 
@@ -91,7 +91,9 @@
 <script>
 	import {  originalUrl,messageCUrl } from '../../../util/urlList.js'
 	import pop from '@/components/ming-pop/ming-pop.vue'
+	import { throttle } from '@/common/throttle.js'
 	export default {
+		components:{pop},
 		data() {
 			return{
 				array: [{
@@ -99,13 +101,20 @@
 				         }],
 				src:'../../../static/icon/itemfont.png',	 
 				clientList:[],
-				client_unit:'',
-				currentPage: 1,
+				Page: 1,
 				size: 10,
 				count: 0,
 				onsearch: false,
 				color: '#5675c6',
-				inputValue:[]	 
+				client_unit:'',
+				client_code:'',
+				client_address:'',
+				client_zip_code:'',
+				client_industry:'',
+				unit_phone:'',
+				unit_fax:'',
+				region:'',
+				note:''
 			}
 		},
 		methods: {
@@ -117,8 +126,11 @@
 						size: this.size
 					}
 				})
-				console.log(res)
+				/* console.log(res) */
 				this.clientList = res.data.results
+				/* console.log(2222,res.data.count) */
+				this.count = res.data.count;
+				uni.hideLoading();
 			},
 			//页面跳转
 			goMesDetail(aid){
@@ -127,18 +139,23 @@
 				})
 			},
 			//搜索框重置
-			reset() {
+			reset:throttle(function(){
+				uni.showLoading();
+				this.page = 1;
+				this.count = 0;
+				this.onsearch = false;
 				this.client_unit = '';
 				this.getClientunit();
-			},
+			}),
 			//点击搜索
-			search(){
+			search:throttle(function(){
+				uni.showLoading();
 				this.onsearch = true;
-				this.clientList = [],
+				/* this.clientList = [], */
 				this.count = 0;
 				this.currentPage = 1;
 				this.getsearch();
-			},
+			}),
 			background() {
 				this.color = "#dedede";
 			},
@@ -150,11 +167,21 @@
 				const res = await this.$myRequest({
 					url:messageCUrl,
 					data:{
+						size: this.size,
 						client_unit:this.client_unit
 					}
 				})
+				uni.hideLoading()
+				if(res.data.count === 0){
+					uni.showToast({
+						icon: "none",
+						title: "没有要查询的内容"
+					})
+				}
 				/* console.log(res) */
 				this.clientList = res.data.results
+				/* console.log(res.data.count) */
+				this.count = res.data.count;
 			},
 			//展示弹窗
 			addClient(){
@@ -166,71 +193,107 @@
 					url:  originalUrl + messageCUrl,
 					method:'POST',
 					data:{
-						client_code:this.inputValue.client_code,
-						client_unit:this.inputValue.client_unit,
-						client_address:this.inputValue.client_address,
-						client_zip_code:this.inputValue.client_zip_code,
-						client_industry:this.inputValue.client_industry,
-						unit_phone:this.inputValue.unit_phone,
-						unit_fax:this.inputValue.unit_fax,
-						region:this.inputValue.region,
-						note:this.inputValue.note
+						client_code:this.client_code,
+						client_unit:this.client_unit,
+						client_address:this.client_address,
+						client_zip_code:this.client_zip_code,
+						client_industry:this.client_industry,
+						unit_phone:this.unit_phone,
+						unit_fax:this.unit_fax,
+						region:this.region,
+						note:this.note
 					},
 					header: {
 						'content-type': 'application/x-www-form-urlencoded', 
 					},
 					dataType:'json',
 					success: (res) => {
-							console.log(res.data);
-							this.inputValue = ''
-						}
+							/* console.log(res.data); */
+							this.client_code='',
+							this.client_unit='',
+							this.client_address='',
+							this.client_zip_code='',
+							this.client_industry='',
+							this.unit_phone='',
+							this.unit_fax='',
+							this.region='',
+							this.note='',
+							this.getClientunit(),
+							this.$refs.pop.close()
+						},
+					fail:(res) => {
+						this.client_code='',
+						this.client_unit='',
+						this.client_address='',
+						this.client_zip_code='',
+						this.client_industry='',
+						this.unit_phone='',
+						this.unit_fax='',
+						this.region='',
+						this.note='',
+						message.warning('新建客户失败，请重试')
+					}
 				})
 			},
 			//弹框内容重置
 			resets(){
-				this.inputValue = ''
-			}
+				this.client_code='',
+				this.client_unit='',
+				this.client_address='',
+				this.client_zip_code='',
+				this.client_industry='',
+				this.unit_phone='',
+				this.unit_fax='',
+				this.region='',
+				this.note=''
+			},
 		},
 		onLoad(){
 			this.getClientunit()
 		},
-		components:{pop},
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	//搜索框部分样式
 	.gary{
-		width: 680rpx;
-		height: 300rpx;
-		border: 0.5px solid #DCDCDC;
-		border-radius: 30rpx;
+		box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
 		background: #f4f4f4;
-		margin: 60rpx 35rpx;
+		width: 650rpx;
+		padding: 20rpx;
+		margin: 20rpx auto;
+		border-radius: 30rpx;
 		.header{
-			margin-top: 20px;
-			margin-left: 40rpx;
-			.title{
-				font-size: 15px;
-				color:black;
+			margin-top: 50rpx;
+			display: flex;
+			.label{
+				background: #f4bd5b;
+				border-top-left-radius: 20rpx;
+				border-bottom-left-radius: 20rpx;
+				height: 60rpx;
+				width: 300rpx;
+				span {
+					margin-left: 30rpx;
+					font-size: 35rpx;
+					display: inline-block;
+					line-height: 60rpx;
+					height: 100%;
+					color: #fff;
+				}
 			}
-		}
-		.input{
-			text-align: left;
-			font-size: 40rpx;
-			height: 48rpx;
-			border: 1px solid #f4bd5b;
-			width: 600rpx;
-			border-radius: 10rpx;
-			background: #fff;
-			color: black;
-			margin-top: 10rpx;
+			input {
+				height: 56rpx;
+				font-size: 35rpx;
+				border: 1px solid #f4bd5b;
+				width: 100%;
+				background: #fff;
+			}
 		}
 		.button{
 			width: 650rpx;
 			display: flex;
 			flex-direction: row;
-			margin: 40rpx 20rpx;
+			margin: 50rpx 20rpx;
 		}
 		.yellow{
 			background: #f4bd5b;
@@ -240,26 +303,26 @@
 			border: 1px solid #607fcc;
 		}
 		.blue{
-			/* background: #607fcc; */
+			background: #607fcc;
 			color: white;
 		}
 	}
 	//客户信息部分样式
 	.messages_list{
-		width: 680rpx;
-		height: auto;
-		border: 0.5px solid #DCDCDC;
-		border-radius: 30rpx;
+		box-shadow: 8rpx 8rpx 20rpx  #eaecf0;
 		background: #f4f4f4;
-		margin: 60rpx 35rpx;
+		width: 650rpx;
+		padding: 20rpx;
+		margin: 30rpx auto;
+		border-radius: 30rpx;
 		.news{
-			font-size: 40rpx;
-			font-weight:bold;
+			margin-top: 20rpx;
+			font-size: 30rpx;
 			color: #3b466c;
-			margin: 40rpx 40rpx;
 		}
 		.line{
 			border-bottom: 2px solid #cccccc;
+			margin-top: 20rpx;
 		}
 		.messages_item{
 			width: 100%;

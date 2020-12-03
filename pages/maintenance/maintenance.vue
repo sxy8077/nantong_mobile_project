@@ -35,7 +35,7 @@
 	import uniSearchBar from '@/components/uni-search-bar1/uni-search-bar.vue'
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import { maintenanceUrl } from '../../util/api.js'
-	
+	import { throttle } from '@/common/throttle.js'
 	export default {
 		data() {
 			return {
@@ -68,6 +68,7 @@
 						this.allData.push(item)
 					}
 				})
+				uni.hideLoading();
 				this.sortData = this.getSortData(this.allData,'region')
 			},
 			//将数据分类
@@ -136,9 +137,11 @@
 				}
 			},
 			//点击搜索的取消按钮
-			cancel() {
+			cancel: throttle(function() {
+				uni.showLoading();
 				this.getAllData()
-			},
+			}) 
+				,
 			//跳转的实时监测页面
 			equipmentClick(aid) {
 				uni.navigateTo({
@@ -169,7 +172,8 @@
 		}
 		.search{
 			margin: auto;
-			width: 70%;
+			width: 550rpx;
+			height: 70rpx;
 			border-radius: 10rpx;
 			margin-bottom: 50px;
 		}
