@@ -297,7 +297,7 @@
 					border: 1px solid #f4bd5b;
 					width: 100%;
 					background: #fff;
-					line-height: 50rpx;
+					line-height: 55rpx;
 					text-align: center;
 				}
 			}
