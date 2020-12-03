@@ -11,9 +11,9 @@
 			return {
 				choose: [
 							{name: '客户信息', H5imgUrl: '../../static/icon/email.png', WEIimgUrl: '../static/icon/email.png'},
-							{name: '主机信息', H5imgUrl: '/'},
-							{name: '传感器信息', H5imgUrl: '/'},
-							{name: '设备信息', H5imgUrl: '/'},
+							{name: '主机信息', H5imgUrl: '../../static/icon/engine.png', WEIimgUrl: '../static/icon/engine.png'},
+							{name: '传感器信息', H5imgUrl: '../../static/icon/sensor.png', WEIimgUrl: '../static/icon/sensor.png'},
+							{name: '设备信息', H5imgUrl: '../../static/icon/equipment.png', WEIimgUrl: '../static/icon/equipment.png'},
 					],
 				title: "基本信息"
 			}
