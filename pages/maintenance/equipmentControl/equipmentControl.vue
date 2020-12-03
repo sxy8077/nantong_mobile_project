@@ -9,8 +9,8 @@
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
 					<view class="text">
 						<view>加药泵</view>
-						<view>加药量：</view>
-						<view>状态：<view class="status">启动</view></view>
+						<view>加药量：5 升每秒</view>
+						<view>状态：<view class="status" :style="{ background: status1 ? '#84d3c9' : '#b3b3b3' }">启动</view></view>
 					</view>
 				</view>
 				<view class="time">
@@ -35,8 +35,8 @@
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
 					<view class="text">
 						<view>排污泵</view>
-						<view>加药量：</view>
-						<view>状态：<view class="status">启动</view></view>
+						<view>排污量：5 升每秒</view>
+						<view>状态：<view class="status" :style="{ background: status2 ? '#84d3c9' : '#b3b3b3' }" >启动</view></view>
 					</view>
 				</view>
 				<view class="time">
@@ -95,13 +95,17 @@
 					<t-td align="left">主机编号:</t-td>
 					<t-td align="left">{{equipmentCode}}</t-td>
 				</t-tr>
-				<t-tr font-size="15" color="#5d6f61" >
+				<t-tr v-if="backInfo === '2'" font-size="15" color="#5d6f61" >
 					<t-td align="left">加药量:</t-td>
-					<t-td align="left">已经过去{{this.DoneTime1}}毫秒</t-td>
+					<t-td align="left">{{this.DoneTime1/1000*5}}升</t-td>
 				</t-tr>
-				<t-tr font-size="15" color="#5d6f61" >
+				<t-tr v-if="backInfo === '2'" font-size="15" color="#5d6f61" >
 					<t-td align="left">执行结果:</t-td>
 					<t-td align="left">成功</t-td>
+				</t-tr>
+				<t-tr v-else font-size="15" color="#5d6f61" >
+					<t-td align="left">执行结果:</t-td>
+					<t-td align="left">设备关闭失败，请检查设备!</t-td>
 				</t-tr>
 			</t-table>
 		</pop>
@@ -129,14 +133,14 @@
 </template>
 
 <script>
-	import { equipmentUrl,websocketUrl } from '../../../util/urlList.js'
+	import { equipmentUrl,websocketUrl, wsUrl } from '../../../util/urlList.js'
 	import pop from "@/components/ming-pop/ming-pop.vue"
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
 	import tTable from '@/components/t-table/t-table.vue';
 	import tTh from '@/components/t-table/t-th.vue';
 	import tTr from '@/components/t-table/t-tr.vue';
 	import tTd from '@/components/t-table/t-td.vue';
-	import { createWebSocket ,closeWebSocket , websocket, backInfo } from '../../../common/websocket.js';
+	import { createWebSocket ,closeWebSocket , websocket} from '../../../common/websocket.js';
 	export default {
 		data() {
 			return {
@@ -152,19 +156,22 @@
 				remainTime2:0,
 				DoneTime2:0,
 				aimId:'',
-				backInfo:''
+				backInfo:'',
+				status1:false,
+				status2:false
 			}
 		},
 		onLoad(e) {
 			this.equipmentId = e.equipment_id
 			this.getEquipmentCode()
-			const url = 'ws://10.41.119.14:90';
-			createWebSocket(url)
-			this.getAimId();
-			uni.$on('back',function(data) {
-				this.backInfo = data.info
-				console.log(this.backInfo)
-			})
+			createWebSocket(wsUrl, this)
+			// uni.$on('back',function(data) {
+			// 	this.backInfo = data.info
+			// 	console.log(this.backInfo)
+			// })
+		},
+		onUnload() {
+			closeWebSocket()
 		},
 		methods: {
 			//获得设备编号
@@ -176,6 +183,7 @@
 					}
 				})
 				this.equipmentCode = res.data.data[0].equipment_code
+				this.getAimId();
 			},
 			//倒计时格式
 			fillWithZero(num, n) {
@@ -191,7 +199,7 @@
 				const res = await this.$myRequest({
 					url:websocketUrl,
 					data:{
-						"object_id": this.equipmentId,
+						"object_id": this.equipmentCode,
 						"distinguish_code":"0"
 					}
 				})
@@ -199,15 +207,15 @@
 				this.aimId = res.data.websocket_id
 			},
 			//连接
-			connect() {
+			connect(opration) {
 				let json={
-					send_id:"325",                         //用户id
-					equipment_id: this.equipmentId,   //设备id      
-					action: "打开",
+					send_id:"001",                         //用户id
+					equipment_code: this.equipmentCode,   //设备id      
+					action: opration,
 					distinguish_code: "1",
 					aim_id: this.aimId,
 				}
-				console.log(backInfo)
+				// console.log(backInfo)
 				console.log(JSON.stringify(json));
 				websocket.send(JSON.stringify(json))
 			},
@@ -219,7 +227,27 @@
 					this.$refs.pop1.show();
 				} else {
 					this.$refs.countdown1.pause()
-					this.$refs.pop12.show();
+					this.connect('12')
+					uni.showLoading({
+						title:''
+					})
+					setTimeout(
+						()  => {
+							if(this.backInfo !== '2') {
+								uni.hideLoading()
+								this.$refs.pop12.show();
+								this.status1 = false
+								// uni.showToast({
+								// 	title:'设备关闭失败，请检查设备！',
+								// 	icon:"none"
+								// })
+								// console.log(this.backInfo);
+							} else{
+								uni.hideLoading()
+								this.$refs.pop12.show();
+								this.status1 = false
+							}
+						},1000 )
 				}
 			},
 			switch2Change(e) {
@@ -247,10 +275,31 @@
 						icon:"none"
 					});
 				}else {
-					this.$refs.pop1.close();
-					this.time1 = Number(this.startTime1)*1000
-					this.startTime1 = '0'
-					this.connect()
+					this.connect('11')
+					uni.showLoading({
+						title:''
+					})
+					console.log(this.backInfo)
+					setTimeout(
+						()  => {
+							if(this.backInfo !== '1') {
+								uni.hideLoading()
+								uni.showToast({
+									title:'设备开启失败，请重新再试！',
+									icon:"none"
+								})
+								// console.log(this.backInfo);
+							} else{
+								uni.hideLoading()
+								this.$refs.pop1.close();
+								this.status1 = true
+								this.time1 = 0
+								this.time1 = Number(this.startTime1)*1000
+								this.startTime1 = '0'
+								// console.log(this.backInfo);
+							}
+						},1000 )
+					
 				}
 			},
 			reset1() {
@@ -274,7 +323,26 @@
 			//倒计时结束后
 			onFinish1() {
 				this.$set(this.treatChecked, 'checked1', false)
-				this.$refs.pop12.show();
+				this.status1 = false
+				this.connect('12')
+				uni.showLoading({
+					title:''
+				})
+				setTimeout(
+					()  => {
+						if(this.backInfo !== '2') {
+							uni.hideLoading()
+							this.$refs.pop12.show();
+							// uni.showToast({
+							// 	title:'设备关闭失败，请检查设备！',
+							// 	icon:"none"
+							// })
+							// console.log(this.backInfo);
+						} else{
+							uni.hideLoading()
+							this.$refs.pop12.show();
+						}
+					},1000 )
 			},
 			onFinish2() {
 				this.$set(this.treatChecked, 'checked2', false)
@@ -319,13 +387,13 @@
 				immediate: true,
 				deep: true,
 			},
-			// 'backInfo':{
-			// 	handler:function(newVal,oldVal) {
-			// 		console.log('n',newVal,'o',oldVal)
-			// 	},
-			// 	immediate: true,
-			// 	deep: true,
-			// }
+			'backInfo':{
+				handler:function(newVal,oldVal) {
+					console.log('n',newVal,'o',oldVal)
+				},
+				immediate: true,
+				deep: true,
+			}
 		}
 	}
 </script>
