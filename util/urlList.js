@@ -51,3 +51,5 @@ export const accountPower = 'app/verify/'
 export const user = 'user/'
 
 export const power = 'power/'
+
+export const websocketUrl = 'app/websocket_relation/'

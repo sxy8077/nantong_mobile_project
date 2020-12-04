@@ -30,6 +30,10 @@
 					<uni-icons type="list" color="#3b466c" size="60"></uni-icons>
 					<view class="text">设备详情</view>
 				</view>
+				<view id="demo1" class="scroll-view-item_H">
+					<uni-icons type="locked-filled" color="#3b466c" size="60" @click="navigatorTo('equipmentControl')" ></uni-icons>
+					<view class="text">设备控制</view>
+				</view>
 			</scroll-view>
 		</view>
 		<view class="pic">
@@ -410,6 +414,11 @@
 							url:'../sensorCalibration/sensorCalibration?equipment_id='+this.equipmentId
 						})
 						break;
+					case 'equipmentControl':
+						uni.navigateTo({
+							url:'../equipmentControl/equipmentControl?equipment_id='+this.equipmentId
+						})
+						break;
 				}
 			},
 			//水质提醒红点判断
@@ -420,6 +429,7 @@
 						equipment_id:this.equipmentId
 					}
 				})
+				this.waterRot = 0
 				res.data.data.map(item => {
 					if(item.deal_status === '1') {
 						this.waterRot = this.waterRot +1 
@@ -436,6 +446,7 @@
 						currentPage: this.currentPage, 
 					}
 				})
+				this.equipMaintainRot = 0
 				res.data.data.map(item => {
 					if(item.maintain_status === '0') {
 						this.equipMaintainRot = this.equipMaintainRot +1 

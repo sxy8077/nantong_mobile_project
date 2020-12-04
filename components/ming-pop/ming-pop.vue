@@ -6,10 +6,10 @@
 			<!-- #ifndef MP -->
 				<view v-if="(direction!=='below'&&direction!=='center')" style="height: 100rpx;"></view>
 			<!-- #endif -->
-			<image src="../../static/ming-pop/close.png" mode="" :class="(direction!=='below'&&direction!=='center')?'iconfont-h5':''" class="iconfont" @click="open=false" v-if="is_close"></image>
+			<!-- <image src="../../static/ming-pop/close.png" mode="" :class="(direction!=='below'&&direction!=='center')?'iconfont-h5':''" class="iconfont" @click="open=false" v-if="is_close"></image> -->
 			<slot></slot>
 		</view>
-		<view class="mask" v-if="is_mask" @touchmove.prevent :hidden="!open" @click="open=false"></view>
+		<view class="mask" v-if="is_mask" @touchmove.prevent :hidden="!open" @click="sendFalse"></view>
 	</view>
 </template>
 
@@ -44,6 +44,11 @@
 			},
 			close() {
 				this.open = false;
+			},
+			sendFalse() {
+				this.open = false
+				this.$emit('childVal',this.open)
+				
 			}
 		}
 	}
