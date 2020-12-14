@@ -23,96 +23,6 @@
 			}
 		}
         ,{
-            "path" : "pages/fixedAssets/fixedAssets",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "循环水智慧管家远程监控系统",
-				"navigationBarShadow":{
-					"colorType":"blue"
-				}
-            }
-            
-        }
-        ,{
-            "path" : "pages/basicInfo/basicInfo",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "循环水智慧管家远程监控系统",
-				"navigationBarShadow":{
-					"colorType":"blue"
-				}
-            }
-            
-        }
-        ,{
-            "path" : "pages/basicInfo/engineInfo/engineInfo",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "主机信息",
-                "enablePullDownRefresh": false,
-				"app-plus": {
-					"scrollIndicator" : "none"
-				}
-            }
-            
-        },
-		{
-			"path":"pages/basicInfo/engineInfo/enginedetail",
-			"style":
-			{
-				"navigationBarTitleText": "主机详细信息",
-				"enablePullDownRefresh": false
-			}
-		}
-        ,{
-            "path" : "pages/basicInfo/sensorInfo/sensorInfo",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "传感器信息",
-                "enablePullDownRefresh": false
-            }
-        }
-        ,{
-            "path" : "pages/basicInfo/equipmentInfo/equipmentInfo",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "设备信息",
-                "enablePullDownRefresh": false
-			}
-		}
-		,{
-			"path": "pages/basicInfo/ClientMes/ClientMes",
-			"style": {
-				"navigationBarTitleText": "客户信息"
-			}
-		}
-        ,{
-            "path" : "pages/basicInfo/ClientMes/messages/messages",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": ""
-            }
-            
-        }
-        ,{
-            "path" : "pages/index/accountManage/accountManage",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "账户管理",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/index/accountManage/rolePower/rolePower",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "角色权限",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
             "path" : "pages/maintenance/monitor/monitor",
             "style" :                                                                                    
             {
@@ -123,15 +33,6 @@
 				}
 			}
 		}
-		,{
-            "path" : "pages/fixedAssets/configure/configure",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "设备配置记录",
-                "enablePullDownRefresh": false,
-				"onReachBottomDistance": 100
-            }
-        }
         ,{
             "path" : "pages/maintenance/waterRemind/waterRemind",
             "style" :                                                                                    
@@ -142,16 +43,7 @@
 					"colorType":"blue"
 				}
 			}
-		},
-		{
-            "path" : "pages/fixedAssets/allocation/allocation",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "设备调拨记录",
-                "enablePullDownRefresh": false
-            }
-            
-        }
+		}
         ,{
             "path" : "pages/maintenance/equipmentMaintenance/equipmentMaintenance",
             "style" :                                                                                    
@@ -174,15 +66,7 @@
 					"colorType":"blue"
 				}
 			}
-		},
-		{
-            "path" : "pages/fixedAssets/scrap/scrap",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "设备报废记录",
-                "enablePullDownRefresh": false
-            }
-        }
+		}
         ,{
             "path" : "pages/ClientMaintenance/ClientMaintenance",
             "style" :                                                                                    
@@ -202,57 +86,7 @@
                 "enablePullDownRefresh": false
             }
             
-        },
-		{
-            "path" : "pages/basicInfo/ClientMes/messages/contactMes/contactMes",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "联系人信息",
-                "enablePullDownRefresh": false
-            }
-            
-        },
-       
-		{
-			"path":"pages/fixedAssets/configure/configureDetail",
-			"style" :
-			{
-			    "navigationBarTitleText": "配置详情",
-			    "enablePullDownRefresh": false
-			}
-		},
-		{
-			"path":"pages/fixedAssets/allocation/allocationDeatil",
-			"style" :
-			{
-			    "navigationBarTitleText": "调拨详情",
-			    "enablePullDownRefresh": false
-			}
-		},
-		{
-			"path":"pages/fixedAssets/scrap/scrapDetail",
-			"style" :
-			{
-			    "navigationBarTitleText": "报废详情",
-			    "enablePullDownRefresh": false
-			}
-		},
-		{
-			"path":"pages/basicInfo/sensorInfo/sensorDetail",
-			"style" :
-			{
-			    "navigationBarTitleText": "传感器信息详情",
-			    "enablePullDownRefresh": false
-			}
-		},
-		{
-			"path":"pages/basicInfo/equipmentInfo/equipmentDetail",
-			"style" :
-			{
-			    "navigationBarTitleText": "设备信息详情",
-			    "enablePullDownRefresh": false
-			}
-		}
+        }
     ],
 	"globalStyle": {
 		"backgroundTextStyle": "light",
@@ -275,22 +109,10 @@
 			}
 			,{
 				"text":"运维",
-				// "pagePath":"pages/ClientMaintenance/ClientMaintenance",
-				"pagePath":"pages/maintenance/maintenance",
+				 "pagePath":"pages/ClientMaintenance/ClientMaintenance",
+				//"pagePath":"pages/maintenance/maintenance",
 				"iconPath":"static/icon/maintenance.png",
 				"selectedIconPath":"static/icon/maintenance-active.png"
-			}
-			,{
-				"text":"固定资产",
-				"pagePath":"pages/fixedAssets/fixedAssets",
-				"iconPath":"static/icon/fixedAssets.png",
-				"selectedIconPath":"static/icon/fixedAssets-active.png"
-			}
-			,{
-				"text":"基本信息",
-				"pagePath":"pages/basicInfo/basicInfo",
-				"iconPath":"static/icon/basicInfo.png",
-				"selectedIconPath":"static/icon/basicInfo-active.png"
 			}
 		]
 	}

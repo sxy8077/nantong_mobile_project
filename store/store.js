@@ -18,7 +18,7 @@ const store = new Vuex.Store({
 			state.isLogin = true
 			// state.hasLogin = true
 			state.uerInfo.token = provider.token
-			state.uerInfo.userName = provider.user_name
+			state.uerInfo.userName = provider.username
 			uni.setStorage({
 				key: 'uerInfo',
 				data: provider

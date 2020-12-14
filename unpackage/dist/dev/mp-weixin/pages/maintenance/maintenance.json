@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "循环水智慧管家远程监控系统",
+  "usingComponents": {
+    "uni-search-bar": "/components/uni-search-bar2/uni-search-bar2",
+    "uni-icons": "/components/uni-icons/uni-icons"
+  }
+}
