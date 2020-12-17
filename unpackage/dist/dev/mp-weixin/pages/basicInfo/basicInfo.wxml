@@ -1,1 +1,0 @@
-<view class="basicInfo"><choose-list vue-id="41f36ec6-1" chooseItem="{{choose}}" data-event-opts="{{[['^navigatorTo',[['navigatorTo']]]]}}" bind:navigatorTo="__e" bind:__l="__l"></choose-list></view>
