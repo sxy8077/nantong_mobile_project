@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/maintenance/maintenance",
+    "pages/fixedAssets/fixedAssets",
+    "pages/basicInfo/basicInfo",
+    "pages/basicInfo/engineInfo/engineInfo",
+    "pages/basicInfo/sensorInfo/sensorInfo",
+    "pages/basicInfo/equipmentInfo/equipmentInfo",
+    "pages/basicInfo/ClientMes/ClientMes",
+    "pages/basicInfo/ClientMes/messages/messages",
+    "pages/maintenance/monitor/monitor"
+  ],
+  "subPackages": [],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#607fcc",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "login-template"
+  },
+  "tabBar": {
+    "selectedColor": "#b50e03",
+    "color": "#ccc",
+    "iconWidth": "96px",
+    "fontSize": "96px",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/icon/admin.png",
+        "selectedIconPath": "static/icon/admin-active.png"
+      },
+      {
+        "text": "运维",
+        "pagePath": "pages/maintenance/maintenance"
+      },
+      {
+        "text": "固定资产",
+        "pagePath": "pages/fixedAssets/fixedAssets"
+      },
+      {
+        "text": "基本信息",
+        "pagePath": "pages/basicInfo/basicInfo"
+      }
+    ]
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap69.json"
+}

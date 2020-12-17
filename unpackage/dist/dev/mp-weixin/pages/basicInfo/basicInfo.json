@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "基本信息",
+  "usingComponents": {
+    "choose-list": "/components/choose"
+  }
+}
