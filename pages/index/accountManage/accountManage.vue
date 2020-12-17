@@ -35,7 +35,7 @@
 		<!-- 内容展示区 -->
 		<view class="messages_list">
 			<button class="role"  size="mini" @click="gorolePower">角色权限查看</button>
-			<view class="messages_item" v-for="(item,index) in accountList" v-bind:key='item.aid' >
+			<view class="messages_item" v-for="(item,index) in accountList" v-bind:key='item.id' >
 				<view class="line"></view>
 				<view class='setting'>
 					<image class="picture"
@@ -68,7 +68,8 @@
 				         }],
 				src:'../../../static/icon/itemfont.png',
 				currentPage: 1,
-				size: 20,
+				Page:1,
+				size: 10,
 				count: 0,
 				color: '#5675c6',
 				onsearch: false,
@@ -86,18 +87,22 @@
 				const res = await this.$myRequest({
 					url:user,
 					data:{
-						size:this.size
+						size:this.size,
+						currentPage: this.Page
 					}
 				})
-				/* console.log(1111,res) */
-				this.accountList = res.data.results
+				//res.data.results = res.data.results.filter((item) => item.status === "1")
+				//console.log(1111,res.data.results)
+				this.accountList = [...this.accountList,...res.data.results];
+				//console.log(res.data.count)
+				this.count = res.data.count
 			},
 			//获取角色信息
 			async getrole(){
 				const res = await this.$myRequest({
 					url:role,
 				})
-				// console.log(2222,res)
+				 //console.log(2222,res)
 				const rolesObject = {}
 				for (let i = 0; i < res.data.length; i++) {
 				   rolesObject[res.data[i]['aid']] = res.data[i]['role_name']
@@ -129,6 +134,8 @@
 				this.onsearch = true;
 				this.count = 0;
 				this.currentPage = 1;
+				this.Page = 1;
+				this.accountList=[],
 				this.getRoleids()
 				this.getsearch();
 			}),
@@ -140,10 +147,13 @@
 			},
 			//重置
 			reset: throttle(function(){
+				// uni.showLoading();
 				this.account='',
 				this.currentPage = 1;
+				this.Page = 1;
 				this.count = 0;
 				this.onsearch = false;
+				this.accountList=[],
 				this.role_name='',
 				this.getaccount()
 				this.getrole()
@@ -155,7 +165,8 @@
 					data:{
 						size:this.size,
 						account:this.account,
-						role_id:this.key
+						role_id:this.key,
+						currentPage: this.Page
 					}
 				})
 				uni.hideLoading()
@@ -165,8 +176,8 @@
 						title: "没有要查询的内容"
 					})
 				}
-				/* console.log(22222,res) */
-				this.accountList = res.data.results
+				console.log(22222,res.data.results)
+				this.accountList = [...this.accountList,...res.data.results]
 				this.count = res.data.count;
 			},
 			//拿到role_id
@@ -174,12 +185,26 @@
 				this.key = getKeyByValue(this.rolesObject,this.allRolename[this.role_name]);
 			}
 		},
-		
 		onLoad(){
 			this.getaccount()
 			this.getrole()
-			this.getsearch()	
-		}
+		},
+		onReachBottom() {
+			if(this.onsearch === false){
+				if(this.Page < (this.count/10)){
+					this.Page += 1;
+					//console.log(444,this.Page)
+					this.getaccount();
+					this.flag = true;
+				}
+			}else if(this.onsearch === true){
+				if(this.Page < (this.count/10)){
+					this.Page += 1;
+					this.getsearch();
+					this.flag = true;
+				}
+			}
+		},
 	}
 </script>
 
@@ -213,6 +238,7 @@
 			input {
 				height: 56rpx;
 				font-size: 35rpx;
+				text-align: center;
 				border: 1px solid #f4bd5b;
 				width: 100%;
 				background: #fff;

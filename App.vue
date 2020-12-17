@@ -29,7 +29,8 @@
 						// 	"Token":res.data.token
 						// },
 						data: {
-							"username":res.data.user_name
+							"username":res.data.username,
+							
 						},
 						method: "POST",
 						success: (e) => {

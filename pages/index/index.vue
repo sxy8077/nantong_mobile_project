@@ -9,10 +9,12 @@
 				>
 				</image>
 			</view>
-			<view class="name">{{uerInfo.userName}}</view>
+			<view class="name" >
+				<text>{{uerInfo.userName}}</text>
+			</view>
 			<view class="button">
 				<button  size="mini"  @click="bindLogin">退出登录</button>
-				<button size="mini" @click="goaccountManage">账户管理</button>
+				<button size="mini" @click="goaccountManage" v-if="test">账户管理</button>
 			</view>
 		</view>
 	</view>
@@ -23,6 +25,7 @@
 		mapState,
 		mapMutations
 	} from 'vuex';
+	import { role } from '../../util/urlList.js'
 	
 	export default {
 		computed:{
@@ -42,10 +45,13 @@
 				            mode: 'scaleToFill',    
 				         }],
 				src:'https://uploadfile.bizhizu.cn/up/de/52/a5/de52a5d178f00ebc694716141208876e.jpg',
-				
+				test:false,
+				aid:'',
+				roleid:''
 			}
 		},
-
+		
+		
 		computed: mapState(['isLogin','uerInfo']),
 		// onLoad() {
 		// 	this.isLogin()
@@ -58,12 +64,8 @@
 							url:'/pages/login/login'
 						})
 					}
-				uni.getStorage({
-					key:'uerInfo',
-					success:function(res) {
-						console.log(11,res)
-					}
-				})
+				// this.getRoleaid()
+				
 		},
 		// computed:{
 		// 	isLogin(){
@@ -94,12 +96,36 @@
 				// 	})
 				// }
 			},
+			
+			//拿到不同角色的aid           async + await，使异步问题同步化
+			// async getRoleaid(){
+			// 	const me = this;
+			// 	const res = await this.$myRequest({
+			// 		url:role,
+			// 	})
+			// 	this.aid = res.data[3].aid
+			// 	//console.log(22,this.aid)
+			// 	// uni.getStorage 从本地缓存中异步获取指定 key 对应的内容。
+			// 	uni.getStorage({
+			// 		key:'uerInfo',
+			// 		success:function(res) {
+			// 			//console.log(22211,res)
+			// 			me.roleid = res.data.role_id
+			// 			//console.log(333,me.roleid)
+			// 			if(me.roleid === me.aid){
+			// 				me.test = true;
+			// 			}
+			// 		}
+			// 	})
+				
+			// },
+			
 			//跳转到账户管理页面
 			goaccountManage(){
 				uni.navigateTo({
 					url:'accountManage/accountManage'
 				})
-			}											
+			},
 		}
 	}
 </script>
@@ -115,10 +141,11 @@
 		}
 	}
 	.name{
-		width: 200rpx;
-		font-size: 60rpx;
 		margin-top: 60 rpx;
-		margin-left: 275rpx;
+		display:flex;
+		align-items:center;
+		justify-content:center;
+		font-size: 60rpx;
 	}
 	.button{
 		width: 500rpx;
