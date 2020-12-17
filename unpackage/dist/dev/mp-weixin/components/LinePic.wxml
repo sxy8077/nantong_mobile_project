@@ -1,1 +1,0 @@
-<view class="qiun-columns data-v-2d0cfb2a"><view class="qiun-charts data-v-2d0cfb2a"><canvas class="charts data-v-2d0cfb2a" canvas-id="{{canvasData.id}}" id="{{canvasData.id}}" data-event-opts="{{[['touchstart',[['touchLineA',['$event']]]]]}}" bindtouchstart="__e"></canvas></view></view>
