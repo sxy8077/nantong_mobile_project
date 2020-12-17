@@ -87,6 +87,7 @@
 			                    return;
 			                }
 			                if (e.data.msg === "登陆成功") {
+								console.log(e.data)
 			                    this.login(e.data);
 								// uni.redirectTo({
 								// 	url:'../index/index'

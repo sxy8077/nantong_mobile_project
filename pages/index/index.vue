@@ -25,7 +25,8 @@
 		mapState,
 		mapMutations
 	} from 'vuex';
-	import { role } from '../../util/urlList.js'
+	import { role, outLoginUrl } from '../../util/urlList.js'
+	
 	
 	export default {
 		computed:{
@@ -85,10 +86,22 @@
 			...mapMutations(['logout']),
 			bindLogin() {
 				if (this.isLogin) {
+					uni.getStorage({
+						key:'uerInfo',
+						success:function(res) {
+							this.$myRequest({
+								url:outLoginUrl,
+								data:{
+									user_id:res.data.user_id
+								}
+							})
+						}
+					})
 					this.logout()
 					uni.reLaunch({
 						url:'../login/login'
 					})
+					
 				} 
 				// else {
 				// 	uni.navigateTo({
