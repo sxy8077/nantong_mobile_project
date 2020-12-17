@@ -10,11 +10,12 @@
 		data() {
 			return {
 				choose: [
-							{name: '设备配置记录', H5imgUrl: '../../static/icon/configure.png', WEIimgUrl: '../static/icon/configure.png'},
-							{name: '设备调拨记录', H5imgUrl: '../../static/icon/allocation.png', WEIimgUrl: '../static/icon/allocation.png'},
-							{name: '设备报废记录', H5imgUrl: '../../static/icon/scrap.png', WEIimgUrl: '../static/icon/scrap.png'},
+							{name: '客户信息', H5imgUrl: '../../static/icon/email.png', WEIimgUrl: '../static/icon/email.png'},
+							{name: '主机信息', H5imgUrl: '../../static/icon/engine.png', WEIimgUrl: '../static/icon/engine.png'},
+							{name: '传感器信息', H5imgUrl: '../../static/icon/sensor.png', WEIimgUrl: '../static/icon/sensor.png'},
+							{name: '设备信息', H5imgUrl: '../../static/icon/equipment.png', WEIimgUrl: '../static/icon/equipment.png'},
 					],
-				title: "固定资产"
+				title: "基本信息"
 			}
 		},
 		methods: {
@@ -22,19 +23,23 @@
 				switch(index){
 					case 0:
 						uni.navigateTo({
-							url: 'configure/configure'
+							url: 'ClientMes/ClientMes'
 						})
 						break;
 					case 1:
 						uni.navigateTo({
-							url: 'allocation/allocation'
+							url: 'engineInfo/engineInfo'
 						})
 						break;
 					case 2:
 						uni.navigateTo({
-							url: 'scrap/scrap'
+							url: 'sensorInfo/sensorInfo'
 						})
 						break;
+					case 3:	
+						uni.navigateTo({
+							url: 'equipmentInfo/equipmentInfo'
+						})
 					default:
 						return;
 				}
@@ -52,6 +57,4 @@
 	page {
 	  background-color:$background-color;
 	}
-	
 </style>
-

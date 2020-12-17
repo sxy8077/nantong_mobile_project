@@ -4,21 +4,13 @@
             <view class="input-item">
                 <view class="input-label">账号</view>
 				<view class="input-body">
-<<<<<<< HEAD
-					<input   type="text" placeholder="请输入账号202011020" class="input" name="nameValue" >
-=======
 					<input   type="text" placeholder="请输入账号" class="input" name="nameValue" >
->>>>>>> a52aa1b26ebc747619b9f1436490b7e0ad2a1d83
 				</view>
             </view>
             <view class="input-item">
 				<view class="input-label">密码</view>
 				<view class="input-body">
-<<<<<<< HEAD
-					<input type="text" :password="isHidePassword?true:false" style="margin-right: 50upx;" placeholder="请输入密码admin" maxlength="20"  class="input" name="passwordValue"  />
-=======
 					<input type="text" :password="isHidePassword?true:false" style="margin-right: 50upx;" placeholder="请输入密码" maxlength="20"  class="input" name="passwordValue"  />
->>>>>>> a52aa1b26ebc747619b9f1436490b7e0ad2a1d83
 					<image @click="isHidePasswordClick" class="eye" :src="isHidePassword?'/static/img/attention.png':'/static/img/attention_forbid.png'"></image>
 				</view>
             </view>
