@@ -23,11 +23,11 @@
 					this.login(res.data);
 					// 如果还需要重新校验或是想要刷新token的有效时间 就再联网请求一次
 					uni.request({
-						url: `${this.$serverUrl}/auth.php`,
-						header: {
-							"Content-Type": "application/x-www-form-urlencoded",
-							"Token":res.data.token
-						},
+						url: `${this.$serverUrl}app/login_in/`,
+						// header: {
+						// 	"Content-Type": "application/x-www-form-urlencoded",
+						// 	"Token":res.data.token
+						// },
 						data: {
 							"username":res.data.user_name
 						},

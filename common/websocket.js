@@ -1,7 +1,7 @@
 
 let websocket, lockReconnect = false;
 let backInfo = "123";
-let createWebSocket = (url) => {
+let createWebSocket = (url, me) => {
     websocket = new WebSocket(url);
     websocket.onopen = function () {
        // heartCheck.reset();
@@ -18,9 +18,10 @@ let createWebSocket = (url) => {
     websocket.onmessage = function (event) {
         backInfo = event.data;
         // console.log(event.data);
-        lockReconnect=true;    
+        lockReconnect=true;
+		me.backInfo = event.data;
         //event 为服务端传输的消息，在这里可以处理
-		uni.$emit('back',{'info':backInfo})
+		/* uni.$emit('back',{'info':backInfo}) */
     }
 }
 let reconnect = (url) => {

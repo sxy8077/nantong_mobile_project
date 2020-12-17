@@ -3,13 +3,13 @@
 		<view class="tit">运维首页</view>
 		<uni-search-bar class="search" placeholder="输入搜索的用户单位"  @confirm="search" @cancel='cancel'></uni-search-bar>
 		<view class="areaEquipment" v-for="(value,key,index) in sortData" :key='index' >
-			<view class="head">
+			<view class="head" @click="change(index)" >
 				<text class="area">{{key}}地区</text>
 				<!-- #ifdef H5||APP-PLUS||APP-NVUE||APP-PLUS-NVUE||APP-VUE -->
-					<view class="isShow" @click="changeShow(index)" v-if="index !== i" >
+					<view class="isShow"  v-if="index !== i" >
 						<uni-icons type="arrowdown" color="#989898" size="30"></uni-icons>
 					</view>
-					<view class="isShow" @click="UnchangeShow" v-else>
+					<view class="isShow" v-else>
 						<uni-icons type="arrowup" color="#989898" size="30"></uni-icons>
 					</view>
 				<!-- #endif -->
@@ -50,13 +50,21 @@
 		},
 		methods: {
 			//收起展示面板
-			changeShow(index) {
-				this.i = index
-				// console.log(index)
+			change(index) {
+				this.isShow = !this.isShow
+				if(this.isShow) {
+					this.i = index
+				} else {
+					this.i = -1
+				}
 			},
-			UnchangeShow() {
-				this.i=-1
-			},
+			// changeShow(index) {
+			// 	this.i = index
+			// 	// console.log(index)
+			// },
+			// UnchangeShow() {
+			// 	this.i=-1
+			// },
 			//获取所有数据(未分类)
 			async getAllData() {
 				const res = await this.$myRequest({
@@ -206,7 +214,7 @@
 				background: #fff;
 				flex-wrap: wrap;
 				box-sizing: border-box;
-				margin-bottom: 45px;
+				// margin-bottom: 45px;
 				// margin-top: -20rpx;
 				.equpInfo{
 					padding-left: 70rpx;

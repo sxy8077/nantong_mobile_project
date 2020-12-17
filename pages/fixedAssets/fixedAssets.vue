@@ -1,6 +1,7 @@
 <template>
 	<view class="basicInfo">
 		<choose-list :chooseItem="choose" @navigatorTo="navigatorTo" :title="title"></choose-list>
+		
 	</view>
 </template>
 

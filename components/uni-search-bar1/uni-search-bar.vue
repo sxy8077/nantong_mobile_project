@@ -143,6 +143,9 @@
 		border-width: 0.5px;
 		border-style: solid;
 		border-color: $uni-border-color;
+		input {
+			text-align: center;
+		}
 	}
 
 	.uni-searchbar__box-icon-search {
