@@ -85,16 +85,22 @@
 			// }
 			...mapMutations(['logout']),
 			bindLogin() {
+				let me = this
 				if (this.isLogin) {
 					uni.getStorage({
 						key:'uerInfo',
-						success:function(res) {
-							this.$myRequest({
-								url:outLoginUrl,
-								data:{
-									user_id:res.data.user_id
-								}
-							})
+						success:async function(res) {
+							const outLogin = await me.$myRequest({
+											url:outLoginUrl,
+											data:{
+												user_id:res.data.user_id
+											}
+										})
+							if( outLogin.data.msg === "登出成功" ) {
+								uni.showToast({
+									title:"退出成功"
+								})
+							}
 						}
 					})
 					this.logout()

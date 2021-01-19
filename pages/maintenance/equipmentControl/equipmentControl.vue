@@ -95,11 +95,11 @@
 					<t-td align="left">主机编号:</t-td>
 					<t-td align="left">{{equipmentCode}}</t-td>
 				</t-tr>
-				<t-tr v-if="backInfo === '2'" font-size="15" color="#5d6f61" >
+				<t-tr v-if="backInfo === '12'" font-size="15" color="#5d6f61" >
 					<t-td align="left">加药量:</t-td>
 					<t-td align="left">{{this.DoneTime1/1000*5}}升</t-td>
 				</t-tr>
-				<t-tr v-if="backInfo === '2'" font-size="15" color="#5d6f61" >
+				<t-tr v-if="backInfo === '12'" font-size="15" color="#5d6f61" >
 					<t-td align="left">执行结果:</t-td>
 					<t-td align="left">成功</t-td>
 				</t-tr>
@@ -141,6 +141,7 @@
 	import tTr from '@/components/t-table/t-tr.vue';
 	import tTd from '@/components/t-table/t-td.vue';
 	import { createWebSocket ,closeWebSocket , websocket} from '../../../common/websocket.js';
+	
 	export default {
 		data() {
 			return {
@@ -158,17 +159,24 @@
 				aimId:'',
 				backInfo:'',
 				status1:false,
-				status2:false
+				status2:false,
+				userId:'11'
 			}
 		},
 		onLoad(e) {
 			this.equipmentId = e.equipment_id
 			this.getEquipmentCode()
-			createWebSocket(wsUrl, this)
 			// uni.$on('back',function(data) {
 			// 	this.backInfo = data.info
 			// 	console.log(this.backInfo)
 			// })
+			let me = this
+			uni.getStorage({
+				key:'uerInfo',
+				success:function(res) {
+					me.userId = res.data.user_id
+				}
+			})
 		},
 		onUnload() {
 			closeWebSocket()
@@ -199,17 +207,17 @@
 				const res = await this.$myRequest({
 					url:websocketUrl,
 					data:{
-						"object_id": this.equipmentCode,
+						"object_code": this.equipmentCode,
 						"distinguish_code":"0"
 					}
 				})
-				// console.log(res.data.websocket_id)
+				console.log('aimId',res.data.websocket_id)
 				this.aimId = res.data.websocket_id
 			},
 			//连接
 			connect(opration) {
 				let json={
-					send_id:"001",                         //用户id
+					send_id: this.userId,                    //用户id
 					equipment_code: this.equipmentCode,   //设备id      
 					action: opration,
 					distinguish_code: "1",
@@ -217,13 +225,16 @@
 				}
 				// console.log(backInfo)
 				console.log(JSON.stringify(json));
-				websocket.send(JSON.stringify(json))
+				uni.sendSocketMessage({
+					data:JSON.stringify(json)
+				})
 			},
 			//开关选择器改变
 			switch1Change(e) {
 				let value = e.target.value
 				this.$set(this.treatChecked, 'checked1', value)   // 将点击改变的状态赋给treatChecked.checked1
 				if(value) {
+					createWebSocket(wsUrl, this)
 					this.$refs.pop1.show();
 				} else {
 					this.$refs.countdown1.pause()
@@ -233,7 +244,7 @@
 					})
 					setTimeout(
 						()  => {
-							if(this.backInfo !== '2') {
+							if(this.backInfo !== '12') {
 								uni.hideLoading()
 								this.$refs.pop12.show();
 								this.status1 = false
@@ -246,6 +257,7 @@
 								uni.hideLoading()
 								this.$refs.pop12.show();
 								this.status1 = false
+								closeWebSocket()
 							}
 						},1000 )
 				}
@@ -254,10 +266,27 @@
 				let value = e.target.value
 				this.$set(this.treatChecked, 'checked2', value)   // 将点击改变的状态赋给treatChecked.checked1
 				if(value) {
+					createWebSocket(wsUrl, this)
 					this.$refs.pop2.show();
 				} else {
 					this.$refs.countdown2.pause()
-					this.$refs.pop22.show();
+					this.connect('22')
+					uni.showLoading({
+						title:''
+					})
+					setTimeout(
+						()  => {
+							if(this.backInfo !== '22') {
+								uni.hideLoading()
+								this.$refs.pop22.show();
+								this.status2 = false
+							} else{
+								uni.hideLoading()
+								this.$refs.pop22.show();
+								this.status2 = false
+								closeWebSocket()
+							}
+						},1000 )
 				}
 			},
 			//选择时间
@@ -279,10 +308,10 @@
 					uni.showLoading({
 						title:''
 					})
-					console.log(this.backInfo)
+					// console.log(this.backInfo)
 					setTimeout(
 						()  => {
-							if(this.backInfo !== '1') {
+							if(this.backInfo !== '11') {
 								uni.hideLoading()
 								uni.showToast({
 									title:'设备开启失败，请重新再试！',
@@ -312,9 +341,28 @@
 						icon:"none"
 					});
 				}else {
-					this.$refs.pop2.close();
-					this.time2 = Number(this.startTime2)*1000
-					this.startTime2 = '0'
+					this.connect('21')
+					uni.showLoading({
+						title:''
+					})
+					setTimeout(
+						()  => {
+							if(this.backInfo !== '21') {
+								uni.hideLoading()
+								uni.showToast({
+									title:'设备开启失败，请重新再试！',
+									icon:"none"
+								})
+							} else{
+								uni.hideLoading()
+								this.$refs.pop2.close();
+								this.status2 = true
+								this.time2 = 0
+								this.time2 = Number(this.startTime2)*1000
+								this.startTime2 = '0'
+								// console.log(this.backInfo);
+							}
+						},1000 )
 				}
 			},
 			reset2() {
@@ -330,34 +378,47 @@
 				})
 				setTimeout(
 					()  => {
-						if(this.backInfo !== '2') {
+						if(this.backInfo !== '12') {
 							uni.hideLoading()
 							this.$refs.pop12.show();
-							// uni.showToast({
-							// 	title:'设备关闭失败，请检查设备！',
-							// 	icon:"none"
-							// })
-							// console.log(this.backInfo);
 						} else{
 							uni.hideLoading()
 							this.$refs.pop12.show();
+							closeWebSocket()
 						}
 					},1000 )
 			},
 			onFinish2() {
 				this.$set(this.treatChecked, 'checked2', false)
-				this.$refs.pop22.show();
+				this.status2 = false
+				this.connect('22')
+				uni.showLoading({
+					title:''
+				})
+				setTimeout(
+					()  => {
+						if(this.backInfo !== '22') {
+							uni.hideLoading()
+							this.$refs.pop22.show();
+						} else{
+							uni.hideLoading()
+							this.$refs.pop22.show();
+							closeWebSocket()
+						}
+					},1000 )
 			},
 			//点击弹窗外部分传来的值
 			getFalse1(num) {
 				this.$set(this.treatChecked, 'checked1', num)
 				this.startTime1 = 0
 				this.time1 = 0
+				closeWebSocket()
 			},
 			getFalse2(num) {
 				this.$set(this.treatChecked, 'checked2', num)
 				this.startTime2 = 0
 				this.time2 = 0
+				closeWebSocket()
 			},
 			//获得剩余时间
 			getRemain1(remain) {
@@ -390,6 +451,7 @@
 			'backInfo':{
 				handler:function(newVal,oldVal) {
 					console.log('n',newVal,'o',oldVal)
+					
 				},
 				immediate: true,
 				deep: true,
@@ -503,6 +565,8 @@
 				}
 				.selcet{
 					margin: auto 0rpx;
+					width: 240rpx;
+					margin-right: 10rpx;
 				}
 			}
 			.button{

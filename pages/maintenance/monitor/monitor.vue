@@ -273,6 +273,7 @@
 					}
 				})
 				uni.hideLoading();
+				if(res.data.statusCode === 500) return null
 				this.handleData(res.data)
 			},
 			//处理获得的数据

@@ -124,8 +124,14 @@
 	}
 
 	.uni-numbox__value {
+		/* #ifndef APP-NVUE  */
+		margin-left: -20px;
+		/* #endif */
+		/* #ifdef H5  */
+		margin-left: 0px;
+		/* #endif */
 		background-color: $uni-bg-color;
-		width: 40px;
+		width: 50px;
 		height: $box-height;
 		text-align: center;
 		font-size: $uni-font-size-lg;
@@ -145,8 +151,8 @@
 		justify-content: center;
 		width: $box-width;
 		height: $box-height;
-		// line-height: $box-line-height;
-		// text-align: center;
+		line-height: $box-line-height;
+		text-align: center;
 		font-size: 20px;
 		color: $uni-text-color;
 		background-color: $uni-bg-color-grey;
@@ -161,6 +167,7 @@
 	.uni-numbox__plus {
 		/* #ifndef APP-NVUE */
 		display: flex;
+		margin-right: 10px;
 		/* #endif */
 		flex-direction: row;
 		align-items: center;
