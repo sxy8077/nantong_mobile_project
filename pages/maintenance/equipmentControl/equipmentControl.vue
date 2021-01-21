@@ -140,7 +140,7 @@
 	import tTh from '@/components/t-table/t-th.vue';
 	import tTr from '@/components/t-table/t-tr.vue';
 	import tTd from '@/components/t-table/t-td.vue';
-	import { createWebSocket ,closeWebSocket , websocket} from '../../../common/websocket.js';
+	import { createWebSocket, closeWebSocket, websocket } from '../../../common/websocket.js';
 	
 	export default {
 		data() {
@@ -224,7 +224,7 @@
 					aim_id: this.aimId,
 				}
 				// console.log(backInfo)
-				console.log(JSON.stringify(json));
+				console.log(JSON.stringify(json))
 				uni.sendSocketMessage({
 					data:JSON.stringify(json)
 				})
@@ -248,6 +248,7 @@
 								uni.hideLoading()
 								this.$refs.pop12.show();
 								this.status1 = false
+								closeWebSocket()
 								// uni.showToast({
 								// 	title:'设备关闭失败，请检查设备！',
 								// 	icon:"none"
@@ -280,6 +281,7 @@
 								uni.hideLoading()
 								this.$refs.pop22.show();
 								this.status2 = false
+								closeWebSocket()
 							} else{
 								uni.hideLoading()
 								this.$refs.pop22.show();
@@ -298,71 +300,84 @@
 				this.startTime2 = e
 			},
 			commit1() {
-				if(this.startTime1 == 0) {
+				if( this.aimId === undefined || this.success === false ) {
 					uni.showToast({
-					    title: '时间不能为0',
-						icon:"none"
+					    title: '请等待或刷新页面',
+						icon: "none"
 					});
-				}else {
-					this.connect('11')
-					uni.showLoading({
-						title:''
-					})
-					// console.log(this.backInfo)
-					setTimeout(
-						()  => {
-							if(this.backInfo !== '11') {
-								uni.hideLoading()
-								uni.showToast({
-									title:'设备开启失败，请重新再试！',
-									icon:"none"
-								})
-								// console.log(this.backInfo);
-							} else{
-								uni.hideLoading()
-								this.$refs.pop1.close();
-								this.status1 = true
-								this.time1 = 0
-								this.time1 = Number(this.startTime1)*1000
-								this.startTime1 = '0'
-								// console.log(this.backInfo);
-							}
-						},1000 )
-					
+				} else{
+					if(this.startTime1 == 0) {
+						uni.showToast({
+						    title: '时间不能为0',
+							icon:"none"
+						});
+					}else {
+						this.connect('11')
+						uni.showLoading({
+							title:''
+						})
+						// console.log(this.backInfo)
+						setTimeout(
+							()  => {
+								if(this.backInfo !== '11') {
+									uni.hideLoading()
+									uni.showToast({
+										title:'设备开启失败，请重新再试！',
+										icon:"none"
+									})
+									// console.log(this.backInfo);
+								} else{
+									uni.hideLoading()
+									this.$refs.pop1.close();
+									this.status1 = true
+									this.time1 = 0
+									this.time1 = Number(this.startTime1)*1000
+									this.startTime1 = '0'
+									// console.log(this.backInfo);
+								}
+							},1000 )
+					}
 				}
 			},
 			reset1() {
 				this.startTime1 = '0'
 			},
 			commit2() {
-				if(this.startTime2 == 0) {
+				if( this.aimId === undefined || this.success === false ) {
 					uni.showToast({
-					    title: '时间不能为0',
-						icon:"none"
+					    title: '请等待或刷新页面',
+						icon: "none"
 					});
-				}else {
-					this.connect('21')
-					uni.showLoading({
-						title:''
-					})
-					setTimeout(
-						()  => {
-							if(this.backInfo !== '21') {
-								uni.hideLoading()
-								uni.showToast({
-									title:'设备开启失败，请重新再试！',
-									icon:"none"
-								})
-							} else{
-								uni.hideLoading()
-								this.$refs.pop2.close();
-								this.status2 = true
-								this.time2 = 0
-								this.time2 = Number(this.startTime2)*1000
-								this.startTime2 = '0'
-								// console.log(this.backInfo);
-							}
-						},1000 )
+				} else {
+					if(this.startTime2 == 0) {
+						uni.showToast({
+						    title: '时间不能为0',
+							icon:"none"
+						});
+					}else {
+						this.connect('21')
+						uni.showLoading({
+							title:''
+						})
+						setTimeout(
+							()  => {
+								if(this.backInfo !== '21') {
+									uni.hideLoading()
+									uni.showToast({
+										title:'设备开启失败，请重新再试！',
+										icon:"none"
+									})
+								} else{
+									uni.hideLoading()
+									this.$refs.pop2.close();
+									this.status2 = true
+									this.time2 = 0
+									this.time2 = Number(this.startTime2)*1000
+									this.startTime2 = '0'
+									// console.log(this.backInfo);
+								}
+							},1000 )
+					}
 				}
 			},
 			reset2() {
@@ -381,6 +396,7 @@
 						if(this.backInfo !== '12') {
 							uni.hideLoading()
 							this.$refs.pop12.show();
+							closeWebSocket()
 						} else{
 							uni.hideLoading()
 							this.$refs.pop12.show();
@@ -400,6 +416,7 @@
 						if(this.backInfo !== '22') {
 							uni.hideLoading()
 							this.$refs.pop22.show();
+							closeWebSocket()
 						} else{
 							uni.hideLoading()
 							this.$refs.pop22.show();
@@ -451,7 +468,6 @@
 			'backInfo':{
 				handler:function(newVal,oldVal) {
 					console.log('n',newVal,'o',oldVal)
-					
 				},
 				immediate: true,
 				deep: true,

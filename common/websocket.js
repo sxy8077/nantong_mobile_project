@@ -1,6 +1,7 @@
 
 let websocket, lockReconnect = false;
 let backInfo = "123";
+let success = false
 let createWebSocket = (Url, me) => {
 	//PC
   //   websocket = new WebSocket(url);
@@ -33,12 +34,14 @@ let createWebSocket = (Url, me) => {
 		uni.showToast({
 			title:"连接成功"
 		})
+		me.success = true
 	})
 	uni.onSocketError(function(){
 		reconnect(Url);
 	})
 	uni.onSocketClose(function(){
-		console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
+		console.log('websocket 断开 ')
+		me.success = false
 	})
 	uni.onSocketMessage(function(event){
 		backInfo = event.data;
@@ -78,7 +81,7 @@ let closeWebSocket=()=> {
     // websocket && websocket.close();
 	
 	//mobile
-	uni.onSocketClose(function(){
+	uni.closeSocket(function(){
 		console.log('WebSocket 已关闭！');
 	})
 }
@@ -88,4 +91,5 @@ export {
     backInfo,
     createWebSocket,
     closeWebSocket,
+	success
 };

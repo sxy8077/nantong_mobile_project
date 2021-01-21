@@ -1,7 +1,8 @@
 
 export const originalUrl = 'http://122.51.80.50:8000/';  //服务器
 // export const originalUrl = 'http://10.41.7.235:8000/';
-// export const originalUrl = 'http://10.21.1.48:8000/';
+// export const originalUrl = 'http://10.21.1.21:8000/';
+// export const originalUrl = 'http://192.168.1.107:8000/';
 
 export const enginInfoUrl = 'main_engine/';
 export const messageCUrl = 'client/';
@@ -58,3 +59,5 @@ export const power = 'power/'
 export const websocketUrl = 'app/websocket_relation/'
 export const wsUrl = 'ws://122.51.80.50:90'
 // export const wsUrl = 'ws://10.41.7.235:90'
+// export const wsUrl = 'ws://10.21.1.21:90'
+// export const wsUrl = 'ws://192.168.1.107:90'
