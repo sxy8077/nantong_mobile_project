@@ -46,6 +46,8 @@ export const ScrapEquipmentUrl = 'equipment_scrap/'     //发送报废数据
 export const loginUrl = 'app/login_in/'                 //登录账号
 export const verifyUrl = 'app/verify/'                  //获得角色各种数据
 export const allcationEquipmentUrl = '/equipment_allocation/'   //发送调拨单数据
+export const getEquipmentPumpsUrl = 'app/get_equipped_pump/' // 获得设备对应的泵信息
+export const getRealTimeDataUrl = 'real_time_data/' // 获得实时传感器数据
 
 export const role = 'role/'
 export const rolePower = 'app/role_power/'

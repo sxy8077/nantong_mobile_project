@@ -3,18 +3,18 @@
 		<view class="item">
 			<view class="title">设备编号：{{equipmentCode}}</view>
 			<!-- 阀1 -->
-			<view class="list"  >
+			<view class="list" v-for="(pump, index) in pumps" :key='index' >
 				<view class="line"></view>
 				<view class="listitem" >
 					<image src="../../../static/icon/itemfont.png" mode=""></image>
 					<view class="text">
-						<view>加药泵</view>
-						<view>加药量：5 升每秒</view>
-						<view>状态：<view class="status" :style="{ background: status1 ? '#84d3c9' : '#b3b3b3' }">启动</view></view>
+						<view>{{pump.pump_name}}</view>
+						<view>流量：{{pump.fluid_flow}} L/s</view>
+						<view>状态：<view class="status" :style="{ background: status[index] ? '#84d3c9' : '#b3b3b3' }">启动</view></view>
 					</view>
 				</view>
 				<view class="time">
-					<countdown-timer ref="countdown1" :time="time1" @finish="onFinish1" @sendRemain='getRemain1' autoStart>
+					<countdown-timer ref="countdown" :time="time[index]" @finish="onFinish(pump.pump_name, index)" @sendRemain='getRemain($event, index)' autoStart>
 					    <template v-slot="{day, hour, minute, second, remain, time}" >
 							<view class="custom">
 								<view>{{fillWithZero(hour + (day * 24), 2)}}</view>
@@ -25,68 +25,36 @@
 							</view>
 					    </template>
 					</countdown-timer>
-					<switch :checked="treatChecked.checked1"  color="#84d3c9" @change='switch1Change'  />
+					<switch :checked="treatChecked[pump.pump_name]"  color="#84d3c9" @change='switchChange($event, pump.pump_name, index, pump.fluid_flow, pump.pump_code)'  />
 				</view>
 			</view>
-			<!-- 阀2 -->
-			<view class="list">
-				<view class="line"></view>
-				<view class="listitem" >
-					<image src="../../../static/icon/itemfont.png" mode=""></image>
-					<view class="text">
-						<view>排污泵</view>
-						<view>排污量：5 升每秒</view>
-						<view>状态：<view class="status" :style="{ background: status2 ? '#84d3c9' : '#b3b3b3' }" >启动</view></view>
-					</view>
-				</view>
-				<view class="time">
-					<countdown-timer ref="countdown2" :time="time2" @finish="onFinish2" @sendRemain='getRemain2' autoStart>
-					    <template v-slot="{day, hour, minute, second, remain, time}" >
-							<view class="custom">
-								<view>{{fillWithZero(hour + (day * 24), 2)}}</view>
-								<view>:</view>
-								<view>{{fillWithZero(minute, 2)}}</view>
-								<view>:</view>
-								<view>{{fillWithZero(second, 2)}}</view>
-							</view>
-					    </template>
-					</countdown-timer>
-					<switch :checked="treatChecked.checked2"  color="#84d3c9" @change='switch2Change'  />
-				</view>
-			</view>
-		</view>
 			<!-- 加药量设置时间弹窗 -->
-		<pop ref="pop1" direction="center" :is_close="true" :is_mask="true" :width="80" @childVal='getFalse1'>
-			<view class="pop">
-				<view class="tit">运行时长设置</view>
-				<view class="seletTime">
-					<view >运行时长:</view>
-					<uni-number-box class="selcet" :value="startTime1" @change="bindChange1"></uni-number-box>
-					<view>秒</view>
+			<pop ref="popTime" direction="center" :is_close="true" :is_mask="true" :width="80" @childVal='getFalse'>
+				<view class="pop">
+					<view class="tit">剂量设置</view>
+					<view class="input" >
+						<view class="label"><span >剂量:</span></view>
+						<input type="number" class="inputNum" @input='inputChange' v-model="dosage" />
+						<span class='L' >L(升)</span>
+					</view>
+					<view class="runtime" >
+						<view class="label"><span >运行时长:</span></view>
+						<input type="number" class="inputNum" disabled :value="startTime[showIndex]" />
+						<span class='L' >S(秒)</span>
+					</view>
+					<!-- <view class="seletTime">
+						<view >运行时长:</view>
+						<uni-number-box class="selcet" :value="startTime[showIndex]" @change="bindChange"></uni-number-box>
+						<view>秒</view>
+					</view> -->
+					<view class="button">
+						<button v-if="this.success" type="default" @click="commit">提交</button>
+						<button @click="reset">重置</button>
+					</view>
 				</view>
-				<view class="button">
-					<button type="default" @click="commit1">提交</button>
-					<button @click="reset1">重置</button>
-				</view>
-			</view>
-		</pop>
-			<!-- 排污量设置时间弹窗 -->
-		<pop ref="pop2" direction="center" :is_close="true" :is_mask="true" :width="80" @childVal='getFalse2'>
-			<view class="pop">
-				<view class="tit">运行时长设置</view>
-				<view class="seletTime">
-					<view >运行时长:</view>
-					<uni-number-box class="selcet" :value="startTime2" @change="bindChange2"></uni-number-box>
-					<view>秒</view>
-				</view>
-				<view class="button">
-					<button type="default" @click="commit2">提交</button>
-					<button @click="reset2">重置</button>
-				</view>
-			</view>
-		</pop>
+			</pop>
 		<!-- 加药完毕弹窗 -->
-		<pop ref="pop12" direction="center" :is_close="true" :is_mask="true" :width="80" @childVal='getFalse1' >
+		<!-- <pop ref="pop12" direction="center" :is_close="true" :is_mask="true" :width="80" @childVal='getFalse1' >
 			<t-table border="1" border-color="#eee" class="table">
 				<t-tr font-size="20" color="#fff" background="#f4bd5b" >
 					<t-th align="center">设备执行反馈</t-th>
@@ -108,9 +76,8 @@
 					<t-td align="left">设备关闭失败，请检查设备!</t-td>
 				</t-tr>
 			</t-table>
-		</pop>
-		<!-- 排污量完毕弹窗 -->
-		<pop ref="pop22" direction="center" :is_close="true" :is_mask="true" :width="80" @childVal='getFalse2' >
+		</pop> -->
+		<pop ref="popFinish" direction="center" :is_close="true" :is_mask="true" :width="80" @childVal='getFalse' >
 			<t-table border="1" border-color="#eee" class="table">
 				<t-tr font-size="20" color="#fff" background="#f4bd5b" >
 					<t-th align="center">设备执行反馈</t-th>
@@ -119,21 +86,26 @@
 					<t-td align="left">主机编号:</t-td>
 					<t-td align="left">{{equipmentCode}}</t-td>
 				</t-tr>
-				<t-tr font-size="15" color="#5d6f61" >
-					<t-td align="left">排污量:</t-td>
-					<t-td align="left">已经过去{{this.DoneTime2}}毫秒</t-td>
-				</t-tr>
-				<t-tr font-size="15" color="#5d6f61" >
+				<!-- <t-tr  font-size="15" color="#5d6f61" >
+					<t-td align="left">加药量:</t-td>
+					<t-td align="left">{{this.DoneTime[this.showIndex]/1000*this.NowFluid}}升</t-td>
+				</t-tr> -->
+				<t-tr  font-size="15" color="#5d6f61" >
 					<t-td align="left">执行结果:</t-td>
 					<t-td align="left">成功</t-td>
 				</t-tr>
+				<!-- <t-tr v-else font-size="15" color="#5d6f61" >
+					<t-td align="left">执行结果:</t-td>
+					<t-td align="left">设备关闭失败，请检查设备!</t-td>
+				</t-tr> -->
 			</t-table>
 		</pop>
+		</view>
 	</view>
 </template>
 
 <script>
-	import { equipmentUrl,websocketUrl, wsUrl } from '../../../util/urlList.js'
+	import { equipmentUrl,websocketUrl, wsUrl, getEquipmentPumpsUrl } from '../../../util/urlList.js'
 	import pop from "@/components/ming-pop/ming-pop.vue"
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
 	import tTable from '@/components/t-table/t-table.vue';
@@ -147,29 +119,32 @@
 			return {
 				equipmentId:'',
 				equipmentCode:'',
-				startTime1:'0',
-				time1:0,
-				treatChecked:{checked1:false,checked2:false},
-				remainTime1:0,
-				DoneTime1:0,
-				startTime2:0,
-				time2:0,
-				remainTime2:0,
-				DoneTime2:0,
+				// startTime1:'0',
+				// time1:0,
+				// treatChecked:{'check1':false, 'check2':false},
+				treatChecked:{},
+				// remainTime1:0,
+				// DoneTime1:0,
 				aimId:'',
 				backInfo:'',
-				status1:false,
-				status2:false,
-				userId:'11'
+				// status1:false,
+				userId: '11',
+				pumps: [],
+				status: [false, false],
+				remainTime: [],
+				DoneTime: [],
+				startTime: [],
+				time: [],
+				showIndex: null,
+				success:'',
+				dosage: null,
+				NowFluid: null,
+				pumpCode: null
 			}
 		},
 		onLoad(e) {
 			this.equipmentId = e.equipment_id
 			this.getEquipmentCode()
-			// uni.$on('back',function(data) {
-			// 	this.backInfo = data.info
-			// 	console.log(this.backInfo)
-			// })
 			let me = this
 			uni.getStorage({
 				key:'uerInfo',
@@ -177,9 +152,23 @@
 					me.userId = res.data.user_id
 				}
 			})
+			uni.startPullDownRefresh();
 		},
 		onUnload() {
 			closeWebSocket()
+		},
+		onPullDownRefresh() {
+			this.getEquipmentCode()
+			let me = this
+			uni.getStorage({
+				key:'uerInfo',
+				success:function(res) {
+					me.userId = res.data.user_id
+				}
+			})
+			setTimeout(function () {
+				uni.stopPullDownRefresh();
+			}, 1000);
 		},
 		methods: {
 			//获得设备编号
@@ -192,6 +181,32 @@
 				})
 				this.equipmentCode = res.data.data[0].equipment_code
 				this.getAimId();
+				this.getEquipmentPumps()
+			},
+			// 获得设备对应的泵信息
+			async getEquipmentPumps() {
+				const res = await this.$myRequest({
+					url: getEquipmentPumpsUrl,
+					data: {
+						"equipment_code": this.equipmentCode,
+					}
+				})
+				if(res.data.msg === "获取成功") {
+					this.pumps = res.data.pump_object_list
+					if( this.time.length !== res.data.pump_object_list.length ) {
+						for (let i = 0; i < res.data.pump_object_list.length; i++) {
+							this.status.push(false)
+							this.remainTime.push(0)
+							this.DoneTime.push(0)
+							this.startTime.push(0)
+							this.time.push(0)
+							this.treatChecked[res.data.pump_object_list[i].pump_name] = false
+						}
+						// console.log(this.treatChecked)
+					}	
+				} else {
+					this.pumps = []
+				}
 			},
 			//倒计时格式
 			fillWithZero(num, n) {
@@ -201,6 +216,10 @@
 					len++;
 				}
 				return num;
+			},
+			inputChange() {
+				console.log(this.dosage)
+				this.startTime[this.showIndex] = (this.dosage/this.NowFluid).toFixed(2)
 			},
 			//获得aimId
 			async getAimId() {
@@ -216,13 +235,21 @@
 			},
 			//连接
 			connect(opration) {
-				let json={
-					send_id: this.userId,                    //用户id
-					equipment_code: this.equipmentCode,   //设备id      
-					action: opration,
-					distinguish_code: "1",
-					aim_id: this.aimId,
+				if(this.aimId === undefined ) {
+					this.aimId = ''
+				} 
+				let actionInfo = {
+					pump_code: this.pumpCode,
+					open_time: this.startTime[this.showIndex],
+					dosage: this.dosage + 'L'
 				}
+					let json={
+						send_id: this.userId,                    //用户id
+						equipment_code: this.equipmentCode,   //设备id      
+						action: actionInfo,
+						distinguish_code: "1",
+						aim_id: this.aimId,
+					}
 				// console.log(backInfo)
 				console.log(JSON.stringify(json))
 				uni.sendSocketMessage({
@@ -230,244 +257,235 @@
 				})
 			},
 			//开关选择器改变
-			switch1Change(e) {
+			switchChange(e, pump, index, fluid_flow, code) {
 				let value = e.target.value
-				this.$set(this.treatChecked, 'checked1', value)   // 将点击改变的状态赋给treatChecked.checked1
+				// this.$set(this.treatChecked,this.treatChecked[0], value) 
+				this.$set(this.treatChecked, pump, value)
 				if(value) {
 					createWebSocket(wsUrl, this)
-					this.$refs.pop1.show();
-				} else {
-					this.$refs.countdown1.pause()
-					this.connect('12')
-					uni.showLoading({
-						title:''
-					})
-					setTimeout(
-						()  => {
-							if(this.backInfo !== '12') {
-								uni.hideLoading()
-								this.$refs.pop12.show();
-								this.status1 = false
-								closeWebSocket()
-								// uni.showToast({
-								// 	title:'设备关闭失败，请检查设备！',
-								// 	icon:"none"
-								// })
-								// console.log(this.backInfo);
-							} else{
-								uni.hideLoading()
-								this.$refs.pop12.show();
-								this.status1 = false
-								closeWebSocket()
-							}
-						},1000 )
+					this.$refs.popTime.show()
+					this.showIndex = index
+					this.NowFluid = parseInt(fluid_flow)
+					this.pumpCode = code
 				}
 			},
-			switch2Change(e) {
-				let value = e.target.value
-				this.$set(this.treatChecked, 'checked2', value)   // 将点击改变的状态赋给treatChecked.checked1
-				if(value) {
-					createWebSocket(wsUrl, this)
-					this.$refs.pop2.show();
-				} else {
-					this.$refs.countdown2.pause()
-					this.connect('22')
-					uni.showLoading({
-						title:''
-					})
-					setTimeout(
-						()  => {
-							if(this.backInfo !== '22') {
-								uni.hideLoading()
-								this.$refs.pop22.show();
-								this.status2 = false
-								closeWebSocket()
-							} else{
-								uni.hideLoading()
-								this.$refs.pop22.show();
-								this.status2 = false
-								closeWebSocket()
-							}
-						},1000 )
-				}
-			},
+			// switch1Change(e) {
+			// 	let value = e.target.value
+			// 	this.$set(this.treatChecked, 'checked1', value)   // 将点击改变的状态赋给treatChecked.checked1
+			// 	if(value) {
+			// 		createWebSocket(wsUrl, this)
+			// 		this.$refs.pop1.show();
+			// 	} else {
+			// 		this.$refs.countdown1.pause()
+			// 		this.connect('12')
+			// 		uni.showLoading({
+			// 			title:''
+			// 		})
+			// 		setTimeout(
+			// 			()  => {
+			// 				if(this.backInfo !== '12') {
+			// 					uni.hideLoading()
+			// 					this.$refs.pop12.show();
+			// 					this.status1 = false
+			// 					closeWebSocket()
+			// 					// uni.showToast({
+			// 					// 	title:'设备关闭失败，请检查设备！',
+			// 					// 	icon:"none"
+			// 					// })
+			// 					// console.log(this.backInfo);
+			// 				} else{
+			// 					uni.hideLoading()
+			// 					this.$refs.pop12.show();
+			// 					this.status1 = false
+			// 					closeWebSocket()
+			// 				}
+			// 			},1000 )
+			// 	}
+			// },
 			//选择时间
+			bindChange(e) {
+				this.startTime[this.showIndex] = e
+			},
 			bindChange1(e) {
 				this.startTime1 = e
 				// console.log(this.startTime1)
 			},
-			bindChange2(e) {
-				this.startTime2 = e
-			},
-			commit1() {
-				if( this.aimId === undefined || this.success === false ) {
+			commit() {
+				if(  this.success === false ) {
 					uni.showToast({
-					    title: '请等待或刷新页面',
+					    title: '请刷新页面,确保连接成功！',
 						icon: "none"
 					});
-				} else{
-					if(this.startTime1 == 0) {
+				} else{ 
+					if(this.dosage === null) {
 						uni.showToast({
-						    title: '时间不能为0',
+						    title: '剂量不能为空',
 							icon:"none"
 						});
 					}else {
-						this.connect('11')
+						this.connect()
 						uni.showLoading({
 							title:''
 						})
-						// console.log(this.backInfo)
 						setTimeout(
 							()  => {
 								if(this.backInfo !== '11') {
 									uni.hideLoading()
-									uni.showToast({
-										title:'设备开启失败，请重新再试！',
-										icon:"none"
-									})
-									// console.log(this.backInfo);
+									if(this.backInfo === '该设备未登录') {
+										uni.showToast({
+											title:'该设备未登录！',
+											icon:"none"
+										})
+									} else {
+										uni.showToast({
+											title:'设备开启失败，请重新再试！',
+											icon:"none"
+										})
+									}
 								} else{
-									uni.hideLoading()
-									this.$refs.pop1.close();
-									this.status1 = true
-									this.time1 = 0
-									this.time1 = Number(this.startTime1)*1000
-									this.startTime1 = '0'
-									// console.log(this.backInfo);
+									this.$refs.popTime.close();
+									this.status[this.showIndex] = true
+									this.time[this.showIndex] = 0
+									this.time[this.showIndex] = Number(this.startTime[this.showIndex])*1000
+									// console.log(this.time)
+									this.startTime[this.showIndex] = 0
+									this.$forceUpdate()
 								}
 							},1000 )
 					}
 				}
 			},
-			reset1() {
-				this.startTime1 = '0'
-			},
-			commit2() {
-				if( this.aimId === undefined || this.success === false ) {
-					uni.showToast({
-					    title: '请等待或刷新页面',
-						icon: "none"
-					});
-				} else {
-					if(this.startTime2 == 0) {
-						uni.showToast({
-						    title: '时间不能为0',
-							icon:"none"
-						});
-					}else {
-						this.connect('21')
-						uni.showLoading({
-							title:''
-						})
-						setTimeout(
-							()  => {
-								if(this.backInfo !== '21') {
-									uni.hideLoading()
-									uni.showToast({
-										title:'设备开启失败，请重新再试！',
-										icon:"none"
-									})
-								} else{
-									uni.hideLoading()
-									this.$refs.pop2.close();
-									this.status2 = true
-									this.time2 = 0
-									this.time2 = Number(this.startTime2)*1000
-									this.startTime2 = '0'
-									// console.log(this.backInfo);
-								}
-							},1000 )
-					}
-				}
-			},
-			reset2() {
-				this.startTime2 = '0'
+			// commit1() {
+			// 	if( this.aimId === undefined || this.success === false ) {
+			// 		uni.showToast({
+			// 		    title: '请等待或刷新页面',
+			// 			icon: "none"
+			// 		});
+			// 	} else{
+			// 		if(this.startTime1 == 0) {
+			// 			uni.showToast({
+			// 			    title: '时间不能为0',
+			// 				icon:"none"
+			// 			});
+			// 		}else {
+			// 			this.connect('11')
+			// 			uni.showLoading({
+			// 				title:''
+			// 			})
+			// 			// console.log(this.backInfo)
+			// 			setTimeout(
+			// 				()  => {
+			// 					if(this.backInfo !== '11') {
+			// 						uni.hideLoading()
+			// 						uni.showToast({
+			// 							title:'设备开启失败，请重新再试！',
+			// 							icon:"none"
+			// 						})
+			// 						// console.log(this.backInfo);
+			// 					} else{
+			// 						uni.hideLoading()
+			// 						this.$refs.pop1.close();
+			// 						this.status1 = true
+			// 						this.time1 = 0
+			// 						this.time1 = Number(this.startTime1)*1000
+			// 						this.startTime1 = '0'
+			// 						// console.log(this.backInfo);
+			// 					}
+			// 				},1000 )
+			// 		}
+			// 	}
+			// },
+			reset() {
+				this.startTime[this.showIndex] = 0
+				this.dosage = null
 			},
 			//倒计时结束后
-			onFinish1() {
-				this.$set(this.treatChecked, 'checked1', false)
-				this.status1 = false
-				this.connect('12')
+			onFinish(pump, index) {
+				this.$set(this.treatChecked, pump, false)
+				this.status[index] = false
+				console.log(this.status)
 				uni.showLoading({
 					title:''
 				})
-				setTimeout(
-					()  => {
-						if(this.backInfo !== '12') {
-							uni.hideLoading()
-							this.$refs.pop12.show();
-							closeWebSocket()
-						} else{
-							uni.hideLoading()
-							this.$refs.pop12.show();
-							closeWebSocket()
-						}
-					},1000 )
+				uni.hideLoading()
+				this.$refs.popFinish.show();
 			},
-			onFinish2() {
-				this.$set(this.treatChecked, 'checked2', false)
-				this.status2 = false
-				this.connect('22')
-				uni.showLoading({
-					title:''
-				})
-				setTimeout(
-					()  => {
-						if(this.backInfo !== '22') {
-							uni.hideLoading()
-							this.$refs.pop22.show();
-							closeWebSocket()
-						} else{
-							uni.hideLoading()
-							this.$refs.pop22.show();
-							closeWebSocket()
-						}
-					},1000 )
-			},
+			// onFinish1() {
+			// 	this.$set(this.treatChecked, 'checked1', false)
+			// 	this.status1 = false
+			// 	this.connect('12')
+			// 	uni.showLoading({
+			// 		title:''
+			// 	})
+			// 	setTimeout(
+			// 		()  => {
+			// 			if(this.backInfo !== '12') {
+			// 				uni.hideLoading()
+			// 				this.$refs.pop12.show();
+			// 				closeWebSocket()
+			// 			} else{
+			// 				uni.hideLoading()
+			// 				this.$refs.pop12.show();
+			// 				closeWebSocket()
+			// 			}
+			// 		},1000 )
+			// },
 			//点击弹窗外部分传来的值
-			getFalse1(num) {
-				this.$set(this.treatChecked, 'checked1', num)
-				this.startTime1 = 0
-				this.time1 = 0
-				closeWebSocket()
-			},
-			getFalse2(num) {
-				this.$set(this.treatChecked, 'checked2', num)
-				this.startTime2 = 0
-				this.time2 = 0
+			getFalse(num) {
+				// this.$set(this.treatChecked, 'checked1', num)
+				const me = this
+				for(let i =0; i< me.pumps.length; i++) {
+					me.$set(me.treatChecked, me.pumps[i].pump_name, num)
+				}
+				// console.log(this.treatChecked)
+				const index = this.showIndex
+				this.startTime[index] = 0
+				this.time[index] = 0
+				this.showIndex = null
+				this.NowFluid = null
+				this.pumpCode = null
+				this.dosage = null
 				closeWebSocket()
 			},
 			//获得剩余时间
+			getRemain(e, index) {
+				// this.remainTime[index] = e
+				this.$set(this.remainTime, index, e)
+				// console.log(this.remainTime[index])
+			},
 			getRemain1(remain) {
 				this.remainTime1 = remain
 				// console.log(this.remainTime1)
-			},
-			getRemain2(remain) {
-				this.remainTime2 = remain
-				// console.log(this.remainTime2)
-			},
+			}
 		},
 		components: {pop,uniNumberBox,tTable, tTh, tTr, tTd},
 		watch:{
-			'remainTime1':{
+			'remainTime':{
 				handler:function(newVal,oldVal) {
-					this.DoneTime1 = Number(this.time1) - Number(newVal) 
-					// console.log("已过1",this.DoneTime1)
+					// console.log('n',newVal)
+					this.DoneTime[this.showIndex] = Number(this.time[this.showIndex]) - Number(newVal[this.showIndex])
+					// console.log('已过', this.DoneTime[this.showIndex])
 				},
 				immediate: true,
 				deep: true,
 			},
-			'remainTime2':{
-				handler:function(newVal,oldVal) {
-					this.DoneTime2 = Number(this.time2) - Number(newVal) 
-					// console.log("已过2",this.DoneTime2)
-				},
-				immediate: true,
-				deep: true,
-			},
+			// 'remainTime2':{
+			// 	handler:function(newVal,oldVal) {
+			// 		this.DoneTime2 = Number(this.time2) - Number(newVal) 
+			// 		// console.log("已过2",this.DoneTime2)
+			// 	},
+			// 	immediate: true,
+			// 	deep: true,
+			// },
 			'backInfo':{
 				handler:function(newVal,oldVal) {
 					console.log('n',newVal,'o',oldVal)
+				},
+				immediate: true,
+				deep: true,
+			},
+			'success':{
+				handler:function(newVal,oldVal) {
 				},
 				immediate: true,
 				deep: true,
@@ -483,7 +501,8 @@
 	.equipmentControl{
 		background: $background-color;
 		padding-top: 30rpx;
-		height: 100%;
+		// height: 100%;
+		padding-bottom: 30px;
 		.item{
 			box-shadow: 8rpx 8rpx 20rpx  #5774bc;
 			background: #f4f4f4;
@@ -570,13 +589,72 @@
 				font-size: 50rpx;
 				text-align: center;
 			}
+			.input{
+				margin-top: 30rpx;
+				display: flex;
+				.label{
+					height: 60rpx;
+					width: 150rpx;
+					span {
+						margin-left: 30rpx;
+						font-size: 35rpx;
+						display: inline-block;
+						line-height: 60rpx;
+						height: 100%;
+					}
+				}
+				.inputNum{
+					border: 0.5rpx solid;
+					margin-left: 54rpx;
+					height: 56rpx;
+					font-size: 35rpx;
+					width: 200rpx;
+					text-align:center;
+				}
+				.L {
+					margin-left: 20rpx;
+					font-size: 35rpx;
+					line-height: 60rpx;
+					height: 100%;
+				}
+			}
+			.runtime{
+				margin-top: 30rpx;
+				margin-bottom: 30rpx;
+				display: flex;
+				.label{
+					height: 60rpx;
+					width: 200rpx;
+					span {
+						margin-left: 30rpx;
+						font-size: 35rpx;
+						display: inline-block;
+						line-height: 60rpx;
+						height: 100%;
+					}
+				}
+				.inputNum{
+					border: 0.5rpx solid;
+					margin-left: 4rpx;
+					height: 56rpx;
+					font-size: 35rpx;
+					width: 200rpx;
+					text-align:center;
+				}
+				.L {
+					margin-left: 20rpx;
+					font-size: 35rpx;
+					line-height: 60rpx;
+					height: 100%;
+				}
+			}
 			.seletTime{
 				display: flex;
 				height: 90rpx;
 				line-height: 90rpx;
 				margin: 30rpx auto;
 				view:nth-child(1){
-					margin-left: 50rpx;
+					margin-left: 30rpx;
 					margin-right: 40rpx;
 				}
 				.selcet{

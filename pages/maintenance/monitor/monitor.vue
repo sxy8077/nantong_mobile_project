@@ -43,7 +43,15 @@
 			</view>
 			<!-- swiper切换 swiper-item表示一页 scroll-view表示滚动视窗 -->
 			<swiper  :current="currentTab" @change="swiperTab">
-				<swiper-item class="swiper" v-for="(listItem,listIndex) in tabTitle" :key="listIndex">
+				<swiper-item>
+					<view class="realValues">
+						<view class="realValue" v-for="(item , index) in realTimeData " :key='index'>
+							<span>{{item.mearsure_type}}: </span>
+							<span> {{item.measurement}}</span>
+						</view>
+					</view>
+				</swiper-item>
+				<swiper-item class="swiper" v-for="(listItem,listIndex) in tabTitle.slice(1)" :key="listIndex">
 					<view class="nowVal">当前测量值：{{nowVal(listItem)}}</view>
 					<view class="searchNav">
 						<view class="Time">
@@ -123,14 +131,14 @@
 	import { throttle } from '@/common/throttle.js'
 	import navTab from '../../../components/navTab.vue';
 	import linePic from '../../../components/LinePic.vue';
-	import { equipmentUrl, device, sensorDataUrl, equipmentInfoUrl, ClientWaterRemindUrl,equipMaintainUrl } from '../../../util/urlList.js'
+	import { equipmentUrl, device, sensorDataUrl, equipmentInfoUrl, ClientWaterRemindUrl,equipMaintainUrl, getRealTimeDataUrl } from '../../../util/urlList.js'
 	
 	export default {
 		data() {
 			return {
 				equipmentId:0,
 				currentTab: 0,
-				tabTitle:[],
+				tabTitle:['实时数据'],
 				list: [], //数据格式
 				sensorData: {  categories: [], series: [{name:'pH值',data: [],color: '#000000'}],canvas:null,day:'0'},
 				pHSensorData: {  categories: [], series: [{name:'pH值',data: [],color: '#000000'}],canvas:null,day:'0'},
@@ -154,7 +162,10 @@
 				waterRot:0,
 				equipMaintainRot:0,
 				size:10,
-				currentPage:1
+				currentPage:1,
+				realTimeData: [],
+				equipmentCode: null,
+				timer2: null
 			}
 		},
 		onLoad(e) {
@@ -215,8 +226,21 @@
 					}
 				})
 				this.equipmentData = res.data.data[0]
+				this.equipmentCode = res.data.data[0].equipment_code
 				this.getSensorTpye()
+				this.getRealTimeData(res.data.data[0].equipment_code)
 				},
+			//获得实时检测数据
+			async getRealTimeData(code) {
+				const res = await this.$myRequest({
+					url:getRealTimeDataUrl,
+					data: {
+						"equipment_code": code,
+					}
+				})
+				// console.log(res.data)
+				this.realTimeData = res.data
+			},
 			//获得设备详情数据
 			async getEquipInfoData() {
 				const res = await this.$myRequest({
@@ -367,11 +391,16 @@
 				this.timer = setInterval(() => {
 					this.getAllSensorData()
 				}, 300000);
+				this.timer2 = setInterval(() => {
+					this.getRealTimeData(this.equipmentCode)
+				}, 120000)
 			},
 			//清除定时器
 			clearTimer() {
 				clearInterval(this.timer);
+				clearInterval(this.timer2)
 				this.timer = null;
+				this.timer2 = null
 			},
 			//不同状态显示不同文字
 			handleStatus(numb) {
@@ -547,6 +576,20 @@
 			border-radius: 50rpx;
 			swiper{
 				height: 800rpx;
+			}
+			.realValues {
+				margin: 30rpx 0rpx;
+				display: flex;
+				flex-wrap: wrap;
+				font-size: 36rpx;
+				.realValue {
+					width: 330rpx;
+					margin-left: 30rpx;
+					margin-bottom: 20rpx;
+					span:nth-child(1) {
+						font-weight: 600;
+					}
+				}
 			}
 			.navTab {
 				left: 0;
